@@ -7,6 +7,18 @@ first.
 
 ---
 
+## 2026-08-04 (Tuesday) - Track 1: Policy gradient / actor-critic foundations
+**Title:** Policy Gradient Methods for Reinforcement Learning with Function Approximation
+**Authors:** Richard S. Sutton, David McAllester, Satinder Singh, Yishay Mansour
+**Venue/Year:** Advances in Neural Information Processing Systems 12 (NIPS 1999), MIT Press, 2000
+**Link:** https://proceedings.neurips.cc/paper/1999/file/464d828b85b0bed98e80ade0a5c43b0f-Paper.pdf
+
+**Summary:** Value-based RL with function approximation had a known failure mode: small changes in estimated action values can flip a near-deterministic greedy policy discontinuously, which can prevent convergence or cause oscillation/divergence when combined with function approximation. This paper instead represents the policy directly as its own differentiable function approximator and updates its parameters by gradient ascent on expected reward. The central result, the policy gradient theorem, shows the gradient of expected reward decomposes into a sum over states (weighted by the policy's stationary distribution) of the score function ∇log π(a|s) times the true action-value Qπ(s,a) - notably with no dependence on the gradient of the state-distribution itself, which would otherwise be intractable. The paper then proves a compatible function approximation result: if a critic approximating Qπ is linear in the same features as ∇log π and fit by minimizing mean-squared error, substituting it for the true Qπ introduces no bias into the gradient estimate. Architecturally this yields the modern actor-critic template - a parametrized actor updated via the policy gradient, paired with a compatible-features linear critic trained by TD - and the paper proves this converges to a locally optimal policy, generalizing and formalizing Williams's REINFORCE and earlier heuristic actor-critic schemes.
+
+**Why this, why now:** This is the primary source underpinning every actor-critic method the user's standing interests touch, and it also frames the CMA-ES-vs-MuZero comparison precisely: this paper's gradient-based policy improvement (using ∇log π and a compatible critic) is the theoretical counterpoint to the gradient-free, population-based search CMA-ES performs on the same policy-parameter space.
+
+---
+
 ## 2026-08-03 (Monday) - Track 2: Conformal prediction for sequential decision-making
 **Title:** Conformal Policy Control
 **Authors:** Drew Prinster, Clara Fannjiang, Ji Won Park, Kyunghyun Cho, Anqi Liu, Suchi Saria, Samuel Stanton
