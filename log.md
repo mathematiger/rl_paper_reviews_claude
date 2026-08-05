@@ -7,6 +7,18 @@ first.
 
 ---
 
+## 2026-08-05 (Wednesday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
+**Title:** Model-Based Reinforcement Learning in Discrete-Action Non-Markovian Reward Decision Processes
+**Authors:** Alessandro Trapasso, Luca Iocchi, Fabio Patrizi
+**Venue/Year:** arXiv preprint 2512.14617, December 2025 (submitted to AAAI 2026); Sapienza University of Rome / Fondazione Bruno Kessler
+**Link:** https://arxiv.org/abs/2512.14617
+
+**Summary:** Non-Markovian Reward Decision Processes (NMRDPs) generalize MDPs by letting the reward depend on the whole history rather than just the current state-action pair - the natural setting once a reward machine (a finite automaton tracking task progress) is used to encode temporally-extended objectives. Prior work mostly handled this by flattening the problem into the automaton-augmented "product MDP" and running standard model-free RL on it, discarding the structural separation between environment dynamics and task/reward dynamics and losing sample-efficiency guarantees. This paper introduces QR-Max, a model-based algorithm that explicitly factorizes learning into two optimistic (R-Max-style) models - one over the environment's Markovian transitions, one over the reward machine's automaton transitions - and shows this factorization yields the first PAC-MDP guarantee for discrete-action NMRDPs: with high probability the agent reaches an epsilon-optimal policy within a number of steps polynomial in the relevant problem parameters, rather than needing to learn the full unfactored product transition function. The authors also present Bucket-QR-Max, extending the approach to continuous state spaces via a SimHash-based discretizer that preserves the same factorized optimistic-exploration structure without hand-tuned gridding or function approximation, and show faster, more stable learning than flattened baselines.
+
+**Why this, why now:** This is a direct hit on the user's reward-machines front - it gives a model-based (R-Max-style optimism, product-MDP) route to provably sample-efficient learning under non-Markovian reward exactly by factorizing "environment model" from "task/automaton model," which is structurally the same factorization MuZero already performs (learned dynamics model vs. learned value/reward prediction) and suggests a concrete way to attach reward-machine automaton state to MuZero's planning loop with sample-efficiency guarantees rather than ad hoc reward shaping.
+
+---
+
 ## 2026-08-04 (Tuesday) - Track 1: Policy gradient / actor-critic foundations
 **Title:** Policy Gradient Methods for Reinforcement Learning with Function Approximation
 **Authors:** Richard S. Sutton, David McAllester, Satinder Singh, Yishay Mansour
