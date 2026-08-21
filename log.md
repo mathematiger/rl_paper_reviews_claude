@@ -7,6 +7,18 @@ first.
 
 ---
 
+## 2026-08-21 (Friday) - Track 5: Graph-structured / infrastructure RL
+**Title:** Interpretable Policy Distillation for Power Grid Topology Control
+**Authors:** Aleksandra Dmitruka, Kārlis Freivalds
+**Venue/Year:** arXiv preprint 2606.00561, May 2026 (University of Latvia, Faculty of Exact Sciences and Technology)
+**Link:** https://arxiv.org/abs/2606.00561
+
+**Summary:** Deep RL policies for power grid topology control are typically large neural networks that are expensive to evaluate at each control step, hard to deploy on constrained hardware, and opaque to the human operators who must ultimately trust or override them. This paper asks whether a trained neural policy can be compressed into a small, directly-inspectable surrogate without giving up operational performance. A PPO teacher is first trained on Grid2Op's standard 14-bus environment under a stability-oriented reward, with data collection deliberately biased toward stressed, high-loading grid states rather than uniform sampling, since these are the states where topology-change decisions matter most. The teacher's behavior is then distilled into two tree-based surrogates - a single decision tree and a random forest - fit to imitate the PPO policy's action choices on the collected trajectories. On held-out validation episodes, both surrogates not only preserve but exceed the teacher's mean reward and episode survival length, at a small fraction of the inference cost of a forward pass through the neural policy. The decision tree in particular achieves high exact-match agreement with the PPO agent's greedy action and near-complete agreement when compared against the PPO agent's top-ranked action set, while remaining small enough for an operator to read and audit directly - showing that grid-topology policies learned by deep RL can, in this setting, be captured by a much simpler, transparent rule set.
+
+**Why this, why now:** This lands directly on the user's own Grid2Op benchmark and shows that a policy's ranked candidate-action set can be distilled into a compact surrogate while preserving near-complete agreement with the neural policy's top-ranked actions - the same "which actions belong in the trusted top-k" question the user's recall-maximizing conformal action selection (split-conformal/APS/RAPS) is built to answer, just approached here via imitation-based interpretability rather than distribution-free coverage guarantees, making it a useful contrast point for how a MuZero-scale candidate action set could be audited or compressed downstream of planning.
+
+---
+
 ## 2026-08-20 (Thursday) - Track 6: Statistical learning theory (VC theory, Rademacher complexity, bias-variance decompositions)
 **Title:** Rademacher and Gaussian Complexities: Risk Bounds and Structural Results
 **Authors:** Peter L. Bartlett, Shahar Mendelson
