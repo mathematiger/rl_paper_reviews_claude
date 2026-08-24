@@ -7,6 +7,18 @@ first.
 
 ---
 
+## 2026-08-24 (Monday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
+**Title:** NonZero: Interaction-Guided Exploration for Multi-Agent Monte Carlo Tree Search
+**Authors:** Sizhe Tang, Zuyuan Zhang, Mahdi Imani, Tian Lan
+**Venue/Year:** ICML 2026 (Spotlight); arXiv:2605.00751, May 2026 (George Washington University)
+**Link:** https://arxiv.org/abs/2605.00751
+
+**Summary:** In cooperative multi-agent MCTS, the joint-action space grows exponentially with the number of agents, so a planner that expands nodes by enumerating full joint actions quickly exhausts any realistic search budget - most standard MCTS/AlphaZero-style expansion schemes simply cannot scale past a handful of agents. NonZero replaces exhaustive joint-action expansion with a candidate-proposal rule that never enumerates the full action space: instead, it scores small local deviations from the current joint action using an interaction score - single-agent deviations ranked by their predicted value gain, and two-agent deviations scored by a mixed-difference measure that specifically surfaces coordination benefits invisible to any single agent acting alone (i.e., cases where two agents must move together to gain, even though neither gains by moving alone). This proposal step is formalized as a bandit problem over the space of local deviations, and the paper derives the NonZero proposal rule together with a sublinear local-regret guarantee for converging toward approximate graph-local optima, all without ever materializing the exponential joint-action set. A surrogate model over a low-dimensional nonlinear representation of the joint state guides which deviations look promising before committing search budget to them. Evaluated on MatGame, SMAC, and SMACv2 against strong model-based and model-free baselines under matched search budgets, NonZero improves sample efficiency and final performance, with gains up to 14% concentrated in non-linear-interaction scenarios where curvature-aware exploration avoids the local stagnation that flatter baseline heuristics fall into.
+
+**Why this, why now:** Grid2Op's topology-control action space is exactly the kind of large, combinatorial action set (per-substation configuration choices that combine into an exponential joint space) that defeats naive MCTS expansion, and NonZero's core move - propose a small, scored set of local deviations via a bandit rule instead of enumerating the full action space, with a formal regret guarantee on the resulting candidate set - is structurally the same problem the user's recall-maximizing conformal candidate-action selection (split-conformal/APS/RAPS) is solving from a different angle: both are mechanisms for cheaply narrowing a combinatorial action space to a small, defensible candidate set before spending planning or coverage budget on it.
+
+---
+
 ## 2026-08-23 (Sunday) - Track W2: Influential GNN breakthroughs
 **Title:** Semi-Supervised Classification with Graph Convolutional Networks
 **Authors:** Thomas N. Kipf, Max Welling
