@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-08-26 (Wednesday) - Track 3: Calibration of learned value/policy heads, uncertainty quantification in deep RL
+**Title:** Start Classifying: Categorical Critics for LLM Reinforcement Learning
+**Authors:** Zhijian Zhou, Long Li, Xuan Zhang, Zongkai Liu, Yulei Qin, Ke Li, Xing Sun, Xiaoyu Tan, Chao Qu, Yuan Qi
+**Venue/Year:** COLM 2026 (accepted); arXiv:2608.02181, August 2026
+**Link:** https://arxiv.org/abs/2608.02181
+
+**Summary:** PPO-style RL with verifiable rewards trains its critic by mean-squared-error regression onto scalar return targets. The authors argue that although scalar MSE is a statistically valid estimator of the conditional mean, it is a poor *optimization* target when rewards are sparse and binary: the regression head is fit against a distribution that shifts under the on-policy data stream, and an imperfectly-fit scalar head produces systematically asymmetric advantages - overestimating on some prefixes, underestimating on others - which biases the actor update in a direction that has nothing to do with the true return. Their fix is deliberately minimal and touches only the critic's output layer: replace the scalar head with a categorical predictor over a discretized value support and train it by cross-entropy against HL-Gauss targets (the scalar return smeared into a narrow Gaussian and integrated into the support bins). At inference the categorical head is decoded back to its scalar expectation and fed into ordinary GAE, so the actor update is unchanged and the method is *not* distributional RL - it is classification used purely as a better-conditioned surrogate loss for regression. Empirically, HL-Gauss PPO beats strong PPO and DAPO baselines across mathematical reasoning, tool-augmented math, and Search-R1, on both Qwen2.5 and Qwen3 backbones. The diagnostic evidence is the interesting part: the categorical head improves Brier score by ~19%, ECE by ~18%, and MCE by ~28% over the MSE head, and the resulting advantages are measurably more symmetric and lower-variance.
+
+**Why this, why now:** This is a direct, controlled experiment on the exact question behind value/policy-head calibration diagnostics - whether ECE/Brier on a learned head is merely a reporting statistic or a quantity whose improvement causally translates into better downstream control - and it answers by isolating the head's *loss function* as the only changed variable while holding the rest of the algorithm fixed. The specific finding that a two-hot/HL-Gauss categorical head yields lower ECE and more symmetric advantages than a scalar regression head is the kind of ablation that transfers to any setting where a value head's calibration is being audited before it is trusted, power grid control included.
+
+**Connection to other papers:** It is the LLM-RL instantiation of Farebrother et al.'s "Stop Regressing: Training Value Functions via Classification for Scalable Deep RL" (2024), which introduced HL-Gauss as a value-learning loss and attributed its gains to representation and optimization effects rather than to distributional modelling; this paper adds the calibration measurements that work largely left implicit. It also sits orthogonally to "Auditing the Risk Claims of Distributional Reinforcement Learning" (logged 2026-08-12): that paper asks whether a *full* return distribution buys anything beyond the mean and finds the claims overstated, while this one deliberately throws the distribution away at decode time and keeps only the classification loss - together they suggest the benefit of categorical heads is optimization and calibration, not distributional information.
+
+---
+
 ## 2026-08-25 (Tuesday) - Track 7: Exploration theory (UCB/bandit foundations, bootstrapped/ensemble exploration)
 **Title:** Deep Exploration via Bootstrapped DQN
 **Authors:** Ian Osband, Charles Blundell, Alexander Pritzel, Benjamin Van Roy
