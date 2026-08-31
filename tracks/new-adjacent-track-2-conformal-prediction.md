@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months applying conformal predicti
 
 ---
 
+## 2026-08-31 (Monday) - Track 2: Conformal prediction for sequential decision-making
+**Title:** Conformal Prediction Beyond the Horizon: Distribution-Free Inference for Policy Evaluation
+**Authors:** Feichen Gan, Youcun Lu, Yingying Zhang, Yukun Liu
+**Venue/Year:** NeurIPS 2025 (poster); arXiv:2510.26026, October 2025
+**Link:** https://arxiv.org/abs/2510.26026
+
+**Summary:** Policy evaluation usually reports a point estimate of the expected return, but a decision maker who cares about downside risk wants an interval around the return that an individual trajectory will actually realize. Conformal prediction supplies exactly that kind of distribution-free interval, yet its exchangeability assumption fails hard in the infinite-horizon RL setting: the target quantity (the discounted return from a state) is never observed in finite data, transitions inside a trajectory are temporally dependent, and off-policy evaluation adds a distribution shift between the behaviour policy that generated the calibration data and the target policy being evaluated. This paper builds a unified conformal framework that handles all three obstacles for on-policy and off-policy infinite-horizon evaluation. The architecture has two modular pieces. First, a *pseudo-return* construction: the unobserved infinite-horizon return is replaced by a truncated rollout of observed rewards plus a bootstrapped tail supplied by a distributional RL model, so the conformity score has a concrete target whose truncation bias is controllable by horizon length. Second, a *time-aware calibration* strategy that draws calibration points from experience replay via weighted subsampling, thinning temporally adjacent samples and reweighting for the policy shift so that approximate exchangeability is restored. The theory gives coverage lower bounds that explicitly absorb both distributional-model misspecification and importance-weight estimation error, quantified in Wasserstein distance rather than assumed away. Experiments on synthetic MDPs and Mountain Car show markedly better empirical coverage than intervals read directly off a distributional RL head.
+
+**Why this, why now:** The load-bearing mechanism here is calibrating a learned return/value head with split-conformal machinery on data that is temporally dependent and off-policy — the same obstacle that arises when calibration data comes from a replay buffer of correlated grid trajectories rather than an i.i.d. holdout, and the paper's weighted-subsampling fix plus its misspecification-aware coverage bound are directly reusable there.
+
+**Connection to other papers:** It sits downstream of Zhang et al.'s *Conformal Off-Policy Prediction* (AISTATS 2023) and the finite-horizon *Conformal Off-Policy Evaluation in MDPs* line, extending them from finite horizons and observed outcomes to the infinite-horizon case via the pseudo-return trick. It is complementary to the action-conditional risk-averse work logged on 2026-08-17: that paper conditions the guarantee on the action to shape a feasible decision set, whereas this one conditions on a state and calibrates the return distribution itself.
+
+---
+
 ## 2026-08-17 (Monday) - Track 2: Conformal prediction for sequential decision-making
 **Title:** Conformal Risk-Averse Decision Making with Action Conditional Guarantee
 **Authors:** Zihan Zhu, Shayan Kiyani, George Pappas, Hamed Hassani
