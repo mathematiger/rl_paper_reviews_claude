@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-03 (Thursday) - Track 2: Value-based RL foundations and function-approximation divergence results
+**Title:** An Analysis of Temporal-Difference Learning with Function Approximation
+**Authors:** John N. Tsitsiklis, Benjamin Van Roy
+**Venue/Year:** IEEE Transactions on Automatic Control, vol. 42, no. 5, pp. 674-690, May 1997
+**Link:** https://www.mit.edu/~jnt/Papers/J063-97-bvr-td.pdf (publisher record: https://doi.org/10.1109/9.580874)
+
+**Summary:** Two years after Baird's counterexample showed TD-style updates with function approximation can diverge, the open question was not *whether* they diverge but *when* they are safe. This paper draws that line. The setting is policy evaluation for an infinite-horizon discounted Markov chain, cost-to-go J, approximated linearly as Phi r over a fixed feature matrix Phi with linearly independent columns; TD(lambda) updates r online along a *single endless trajectory* of an irreducible aperiodic chain with steady-state distribution pi. The central mechanism is a norm argument. Let D = diag(pi) and let Pi be the projection onto the span of Phi in the pi-weighted norm ||.||_D. Under the chain's own stationary distribution the transition matrix P is nonexpansive in ||.||_D, so the composed operator Pi T^(lambda) is a contraction, giving a unique fixed point r*. The TD(lambda) iteration is then a stochastic approximation of the mean ODE r_dot = A r + b with A negative definite, and standard martingale/ODE arguments yield convergence to r* with probability one - for finite and infinite state spaces alike. The paper adds the accompanying error bound ||Phi r* - J||_D <= ((1 - lambda*gamma)/(1 - gamma)) ||Pi J - J||_D, so TD's answer is within a bounded factor of the best representable one, the factor tightening to 1 as lambda -> 1. Crucially, the authors show both hypotheses are load-bearing: they exhibit divergence when updates are *not* drawn along trajectories of the chain, and a separate example where TD diverges with a nonlinear approximator even on-policy.
+
+**Why this, why now:** The divergence half is the precise theoretical statement about the data-collection side of a multi-worker exploration architecture: the convergence guarantee is bought with the assumption that the sampling distribution *is* the stationary distribution of the policy being evaluated, so scripted-prefix, epsilon-greedy and temperature-sampled workers each shift the effective D away from that, and the paper's counterexample shows the failure is not gradual degradation but genuine blow-up. The (1 - lambda*gamma)/(1 - gamma) bound is also the honest statement of what a bootstrapped value estimate is worth on a long-horizon problem such as power grid topology control: at small lambda and gamma near 1, the guaranteed distance from the best representable value function is enormous, which is a good reason to check learned value/prior heads empirically rather than trust the fixed point.
+
+**Connection to other papers:** It is the direct complement to Baird's residual algorithms paper (logged 2026-08-06, same track): Baird shows the failure and fixes it by changing the *objective* to the Bellman residual, whereas Tsitsiklis and Van Roy keep the semi-gradient update and instead delimit the *conditions* - on-policy sampling plus a linear architecture - under which it is already sound. The same weighted-norm contraction and projected-fixed-point machinery is what Konda and Tsitsiklis (logged 2026-09-01) reuse for the fast-timescale TD(lambda) critic in their actor-critic convergence proof, and the off-policy divergence case left open here is exactly what the later gradient-TD (GTD/TDC) and emphatic-TD families were built to close.
+
+---
+
 ## 2026-09-01 (Tuesday) - Track 1: Policy gradient / actor-critic foundations
 **Title:** Actor-Critic Algorithms
 **Authors:** Vijay R. Konda, John N. Tsitsiklis
