@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months on reward shaping, reward m
 
 ---
 
+## 2026-09-04 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
+**Title:** Expressive Temporal Specifications for Reward Monitoring
+**Authors:** Omar Adalat, Francesco Belardinelli
+**Venue/Year:** AAAI-26 (Proceedings of the AAAI Conference on Artificial Intelligence, vol. 40, no. 24, pp. 19533-19541), 2026; arXiv:2511.12808, November 2025
+**Link:** https://arxiv.org/abs/2511.12808 (publisher record: https://ojs.aaai.org/index.php/AAAI/article/view/39032)
+
+**Summary:** Automaton-based reward specification - reward machines, restraining bolts, LTLf-to-DFA reward monitors - inherits a Boolean semantics: a specification is either satisfied or not, so the monitor emits reward only when an accepting condition fires. On long-horizon tasks the shaped reward is then almost as sparse as the original. This paper replaces the Boolean layer with a quantitative one. Specifications are written in LTLf[F] - linear temporal logic on finite traces in the style of Almagor, Boker and Kupferman's LTL[F], where a formula's satisfaction value lives in [0,1] rather than {0,1} and a set F of quality functions over [0,1] composes sub-formula values, so that (for example) the longer an eventuality goes unfulfilled the lower the value. From such a formula the authors synthesize a quantitative reward monitor that consumes the labelled state trace at runtime and emits a dense real-valued reward at every step, reporting how well the specification is currently being met rather than whether it has been met. The construction is automaton-theoretic - formula to a minimal DFA-style monitor, progressable symbol by symbol, so it can be built on the fly and taken in product with the MDP - and algorithm-agnostic: it needs only a state-labelling function and drops into any RL algorithm in place of the environment reward. Non-Markovian properties are accommodated natively, since the monitor state summarizes history. Empirically the quantitative monitors subsume their Boolean counterparts and, depending on the environment, beat them both on a quantitative measure of task completion and on convergence time.
+
+**Why this, why now:** This is the reward-machine construction the user's non-Markovian reward front already uses, with the emission rule swapped from Boolean acceptance to a graded satisfaction value, which is exactly the missing piece when the specification is a long-horizon safety/recovery condition on a power grid: the automaton state still summarizes history, but every step now carries a signal about how close the trace is to satisfying the spec instead of a zero until the condition trips. That it is algorithm-agnostic and needs only a labelling function means the same labelled-trace interface an existing reward machine consumes can drive this monitor.
+
+**Connection to other papers:** It is the orthogonal axis to Pushdown Reward Machines (logged 2026-08-19, same track): that paper widens *which* trace properties an automaton-based reward can express (regular to deterministic context-free) while keeping Boolean acceptance, whereas this one keeps the expressiveness roughly at LTLf and instead makes the acceptance signal quantitative and dense - the two extensions are composable in principle. Against the model-based NMRDP work logged 2026-08-05, which assumes the reward machine is given or learned and reasons about sample complexity of the surrounding MDP, this paper is upstream: it changes what the automaton emits, so the density it buys is complementary to the sample-efficiency argument there.
+
+---
+
 ## 2026-08-19 (Wednesday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
 **Title:** Pushdown Reward Machines for Reinforcement Learning
 **Authors:** Giovanni Varricchione, Toryn Q. Klassen, Natasha Alechina, Mehdi Dastani, Brian Logan, Sheila A. McIlraith
