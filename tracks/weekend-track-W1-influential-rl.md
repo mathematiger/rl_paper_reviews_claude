@@ -4,6 +4,20 @@ Landmark results and systems that reshaped reinforcement learning - e.g. TD-Gamm
 
 ---
 
+## 2026-09-05 (Saturday) - Track W1: Influential RL breakthroughs
+**Title:** Grandmaster level in StarCraft II using multi-agent reinforcement learning
+**Authors:** Oriol Vinyals, Igor Babuschkin, Wojciech M. Czarnecki, Michaël Mathieu, Andrew Dudzik, Junyoung Chung, David H. Choi, Richard Powell, Timo Ewalds, Petko Georgiev, et al. (DeepMind; David Silver senior author)
+**Venue/Year:** Nature 575, 350-354 (2019)
+**Link:** https://www.nature.com/articles/s41586-019-1724-z
+
+**Summary** (≈220 words): StarCraft II had been the standing counterexample to the "deep RL solves games" narrative: imperfect information, a combinatorial action space (~10^26 legal actions per step), thousands-of-steps horizons, and no single dominant strategy. Every prior agent had leaned on simplified rules, hand-built sub-systems, or superhuman interfaces. AlphaStar attacks it with general-purpose learning under human-like constraints (camera view, capped action rate), playing all three races on the live Battle.net ladder. The agent is first trained by supervised imitation on human replays, then improved with off-policy actor-critic RL (V-trace, TD(λ), and UPGO, a self-imitation update that pushes the policy toward better-than-expected trajectories). The network puts a transformer torso over the variable-length set of units, a deep LSTM core over the observation sequence, an auto-regressive policy head with a pointer network for variable-length targeting, scatter connections to fuse spatial and non-spatial features, and a centralised value baseline that sees the opponent's observations during training only. The central idea, though, is the *league*: naive self-play chases strategic cycles (rock-paper-scissors dynamics) rather than converging. The league runs three agent types — main agents trained by prioritized fictitious self-play against the whole population weighted by win-rate, main exploiters that attack only the current main agent, and league exploiters (periodically reset) that hunt global blind spots. The result: Grandmaster rating, above 99.8% of ranked human players.
+
+**Why this, why now:** It is the cleanest demonstration that in non-transitive multi-agent domains "train against yourself" is the wrong objective, and that deliberately maintaining a population of adversaries whose job is to *lose* the ladder but *expose* your flaws is what makes learning converge — an idea that has since propagated far outside games. The engineering (transformer over units, auto-regressive pointer heads for enormous structured action spaces) is also a nice template for any setting where the action is a composite object rather than a scalar.
+
+**Connection to other papers:** It is the direct heir of TD-Gammon's self-play recipe (Track W1, 2026-08-08), but replaces plain self-play with a league precisely because backgammon's near-transitive strategy space does not carry over to StarCraft; and it inherits the DQN premise (Track W1, 2026-08-22) of learning control from raw game observations while swapping value-based off-policy learning for large-scale actor-critic with V-trace/UPGO.
+
+---
+
 ## 2026-08-22 (Saturday) - Track W1: Influential RL breakthroughs
 **Title:** Playing Atari with Deep Reinforcement Learning
 **Authors:** Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan Wierstra, Martin Riedmiller
