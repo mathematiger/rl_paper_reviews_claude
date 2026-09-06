@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-06 (Sunday) - Track W2: Influential GNN breakthroughs
+**Title:** Neural Message Passing for Quantum Chemistry
+**Authors:** Justin Gilmer, Samuel S. Schoenholz, Patrick F. Riley, Oriol Vinyals, George E. Dahl
+**Venue/Year:** ICML 2017, PMLR 70:1263-1272
+**Link:** https://arxiv.org/abs/1704.01212 (publisher record: https://proceedings.mlr.press/v70/gilmer17a.html)
+
+**Summary** (~230 words): By 2017 there were half a dozen neural architectures for graphs - spectral convolutions, gated graph sequence networks, molecular fingerprint nets, interaction networks, deep tensor nets - each presented with its own notation, and it was genuinely unclear whether they were rivals or the same idea in disguise. The paper's first contribution is a reframing: all of them are instances of one abstraction, the Message Passing Neural Network. A forward pass has two phases. In the message passing phase, repeated for T steps, every node builds an incoming message m_v = sum over neighbours of M_t(h_v, h_w, e_vw) and updates its state h_v <- U_t(h_v, m_v); the choice of M_t and U_t recovers each prior model as a special case. In the readout phase, a permutation-invariant R maps the final node states to a graph-level prediction. The second contribution is to then use the abstraction as a design space and search it. The best configuration uses an edge network message function (a small MLP maps each edge's features to a d x d matrix applied to the neighbour's state), a GRU update, and a set2set readout with attention-based ordering-invariant pooling over nodes; adding a "virtual" fully connected edge type and a master node shortens the graph diameter so information reaches distant atoms in few steps. On QM9 (134k molecules, 13 quantum-chemical targets) the resulting model reaches state of the art on all 13 and DFT-level chemical accuracy on 11, and hits chemical accuracy on 5 using molecular topology alone, with no 3D coordinates.
+
+**Why this, why now:** This is the paper that turned a scattering of graph architectures into a single well-defined design space, and the vocabulary it introduced - message, update, readout - is still how the field talks and how every major GNN library is structured. It is also a satisfying demonstration that a good abstraction pays for itself immediately: once the space was named, systematically searching it beat every individually hand-crafted predecessor, and it did so on a real scientific task where the baseline (DFT) is a physics simulation costing orders of magnitude more compute.
+
+**Connection to other papers:** GCN (Track W2, 2026-08-23) and GAT (Track W2, 2026-08-09) are both exactly instances of this framework - a degree-normalised sum and an attention-weighted sum as the message function - so MPNN is the roof under which both sit rather than a competitor to either. It is also the object of study for the theory picks: "How Powerful are GNNs?" (Track W4, 2026-08-16) bounds precisely this aggregation scheme by 1-WL, and the over-squashing/curvature work (Track W4, 2026-08-30) formalises the bottleneck that MPNN's virtual edges and master node were an early empirical patch for.
+
+---
+
 ## 2026-09-05 (Saturday) - Track W1: Influential RL breakthroughs
 **Title:** Grandmaster level in StarCraft II using multi-agent reinforcement learning
 **Authors:** Oriol Vinyals, Igor Babuschkin, Wojciech M. Czarnecki, Michaël Mathieu, Andrew Dudzik, Junyoung Chung, David H. Choi, Richard Powell, Timo Ewalds, Petko Georgiev, et al. (DeepMind; David Silver senior author)
