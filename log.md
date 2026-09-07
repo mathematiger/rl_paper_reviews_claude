@@ -7,6 +7,21 @@ first.
 
 ---
 
+## 2026-09-07 (Monday) - Track 5: Graph-structured / infrastructure RL
+**Title:** Towards Autonomous Railway Operations: A Semi-Hierarchical Deep Reinforcement Learning Approach to the Vehicle Rescheduling Problem
+**Authors:** Alberto Castagna, Stefan Zahlner, Adrian Egli, Christian Eichenberger, Daniel Boos, Manuel Meyer, Anton Fuxjäger
+**Venue/Year:** arXiv preprint 2605.10257, May 2026 (Flatland-RL / Swiss Federal Railways-adjacent authorship)
+**Link:** https://arxiv.org/abs/2605.10257
+
+**Summary:** Railway traffic management has to absorb disruptions in real time, and as traffic density rises against fixed infrastructure limits, the underlying Vehicle Routing and Scheduling Problem becomes hard to solve reliably inside an operational time budget. Learned controllers for this setting are typically monolithic: one policy emits every decision from one shared action space. The paper argues this conflates two decisions of fundamentally different character - *when* to let a train depart (dispatching) and *which* path it should take through the network (routing). Dispatch decisions are rare but high-impact; routing decisions are frequent, local, and low-stakes individually. A single policy therefore suffers task interference and a badly skewed exploration budget, spending nearly all of its samples on the frequent decision type while the rare, load-bearing one stays under-trained. The proposed framework, Maze-Flatland, is semi-hierarchical: control is split into two coordinated levels - Multi-Agent Departure Scheduling above, Multi-Agent Path Finding below - each with its *own* dedicated observation and action space, so each policy specialises in a single decision scope instead of time-sharing one head. The decomposition is evaluated on the Flatland-RL simulator across five difficulty levels, 50 random seeds, and instances from 7 to 80 trains. Against both heuristic baselines and monolithic RL it nearly doubles the number of trains reaching their destination, improves resource utilisation and robustness, and keeps deadlock rates below 5%.
+
+**Why this, why now:** The paper's central diagnosis - that a rare, high-impact decision type gets starved of exploration when it shares an action space and a sampling budget with a frequent, low-impact one - is exactly the pathology in infrastructure control where the great majority of steps are inconsequential and only a handful of interventions actually matter, and its fix (separate observation/action spaces per decision scope, coordinated rather than fully hierarchical) is a concrete architectural alternative to correcting the imbalance purely on the exploration side via scripted prefixes, epsilon-greedy TD-proxy workers, or temperature sampling. It is also a clean read on how a large discrete intervention space over a networked topology can be factored without giving up coordination, on a benchmark close enough to the user's power-grid setting to transfer.
+
+**Connection to other papers:** This is the same factorisation instinct as Fabrizio et al. (Track 5, 2026-08-07), which likewise pairs a high-level manager with specialised low-level agents on Grid2Op - but where that work factorises the *observation* spatially via a GNN over local topology, this one factorises by *decision type*, keeping observations task-specific rather than agent-local, so the two are complementary axes of the same decomposition. It also stands in contrast to Dmitruka & Freivalds (Track 5, 2026-08-21), which shrinks a monolithic policy after the fact by distillation, whereas Maze-Flatland avoids the monolith at training time.
+
+---
+
+
 ## 2026-09-06 (Sunday) - Track W2: Influential GNN breakthroughs
 **Title:** Neural Message Passing for Quantum Chemistry
 **Authors:** Justin Gilmer, Samuel S. Schoenholz, Patrick F. Riley, Oriol Vinyals, George E. Dahl
