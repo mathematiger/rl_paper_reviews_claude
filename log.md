@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-08 (Tuesday) - Track 3: MCTS and planning theory
+**Title:** A Sparse Sampling Algorithm for Near-Optimal Planning in Large Markov Decision Processes
+**Authors:** Michael Kearns, Yishay Mansour, Andrew Y. Ng
+**Venue/Year:** Machine Learning, vol. 49, no. 2-3, pp. 193-208, 2002 (original version: IJCAI-99)
+**Link:** https://doi.org/10.1023/A:1017932429737
+
+**Summary:** Classical planning and RL methods - value iteration, policy iteration, tabular Q-learning - have running times that scale at least linearly in the number of states, which rules them out for the enormous or continuous state spaces that arise in practice. This paper asks what is achievable when the only access to the MDP is a *generative model*: a black box that, given a state-action pair, returns a sampled next state and reward. The answer is a randomized online planning algorithm that, for a query state s, builds a sampled lookahead tree of depth H in which every node samples exactly C next states per action, and then backs values up recursively: Q-hat(s,a) is the immediate reward plus gamma times the empirical average of V-hat over the C sampled successors, with V-hat the max over actions. The action returned at the root is argmax Q-hat. The central result is that with H on the order of (1/(1-gamma)) log(V_max/epsilon) and C polynomial in V_max/epsilon and H, the returned action is epsilon-optimal with high probability - and the total number of generative-model calls, roughly (|A| C)^H, is completely independent of the size of the state space. The failure probability is controlled by a union bound over a tree whose per-level sampling error is compounded but geometrically discounted. The authors also prove a lower bound showing the exponential dependence on the horizon cannot be removed for algorithms in this access model, so the curse of dimensionality is traded for a curse of horizon rather than eliminated. No value function is stored; planning is per-state and on demand.
+
+**Why this, why now:** The (|A| C)^H cost structure is the precise statement of why search depth in a large discrete action space is bought with the *per-node action branching factor*, which makes shrinking the candidate action set at each node - rather than deepening the tree - the load-bearing lever for tree search on combinatorial control problems such as power-grid topology control; it also makes explicit what a fixed simulation budget spread uniformly across actions buys you, which is the baseline any non-uniform or worker-parallel allocation of rollouts has to beat.
+
+**Connection to other papers:** This is the direct theoretical predecessor of UCT (Kocsis and Szepesvari 2006, logged 2026-08-11): both assume only generative-model access and both achieve state-space-independent planning, but sparse sampling allocates a fixed C samples per action uniformly and gets a finite-sample worst-case guarantee, whereas UCT reallocates the same budget adaptively via UCB1 and gets asymptotic consistency instead. The lower bound here is also the reason later work attacks the horizon rather than the state count - via learned value functions truncating H, or model-approximation criteria such as the value-equivalence principle (logged 2026-08-27) that change what the sampled model must be accurate about.
+
+---
+
 ## 2026-09-07 (Monday) - Track 5: Graph-structured / infrastructure RL
 **Title:** Towards Autonomous Railway Operations: A Semi-Hierarchical Deep Reinforcement Learning Approach to the Vehicle Rescheduling Problem
 **Authors:** Alberto Castagna, Stefan Zahlner, Adrian Egli, Christian Eichenberger, Daniel Boos, Manuel Meyer, Anton Fuxjäger
