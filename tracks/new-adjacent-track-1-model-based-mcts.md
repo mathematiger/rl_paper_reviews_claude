@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months on model-based RL and MCTS 
 
 ---
 
+## 2026-09-09 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
+**Title:** Twice Sequential Monte Carlo for Tree Search
+**Authors:** Yaniv Oren, Joery A. de Vries, Pascal R. van der Vaart, Matthijs T. J. Spaan, Wendelin Böhmer
+**Venue/Year:** ICML 2026 (arXiv preprint 2511.14220, November 2025)
+**Link:** https://arxiv.org/abs/2511.14220
+
+**Summary** (150-250 words): Search-based policy improvement is the engine behind most model-based RL milestones, but MCTS is inherently sequential: each simulation must finish before the next selection step, which maps badly onto GPUs. Sequential Monte Carlo (SMC) planning was proposed as a replacement — a population of particles is propagated forward through the learned model in lockstep and periodically resampled by weight, so the whole search is one batched tensor operation. The catch is statistical: SMC estimators have high variance, and resampling causes *path degeneracy*, where after enough depth every surviving particle traces back to the same root action. The improved policy target then collapses to a delta distribution and further search buys nothing. The paper introduces Twice Sequential Monte Carlo Tree Search (TSMCTS): a second, outer sequential process wrapped around the inner SMC sweep, borrowing the root-level budget allocation of Sequential Halving from Gumbel-style MCTS and MCTS-like statistics aggregation, so that root actions are eliminated deliberately rather than by resampling accident. Architecturally, the inner loop stays a fully parallel particle filter over the learned dynamics; the outer loop repeatedly re-seeds it over a shrinking candidate set of root actions. Evaluated as a policy improvement operator across discrete/combinatorial tasks (Jumanji) and continuous control (Brax), TSMCTS beats the SMC baseline everywhere and a modern Gumbel-MCTS baseline nearly everywhere, with measurably lower estimator variance, reduced root degeneracy, and returns that keep improving as sequential compute grows — while retaining SMC's parallel runtime and memory profile.
+
+**Why this, why now:** The mechanism here is exactly the one that limits search-based agents on large power-grid topology action spaces: root-level budget allocation over a candidate action set, and the trade-off between sequential search depth and how many rollouts you can batch across parallel workers. Sequential Halving over a shrinking root candidate set is directly reusable wherever a search operator has to spend a fixed simulation budget over many nominally-legal actions, and the path-degeneracy diagnostic is a concrete way to check whether extra search is actually sharpening the improved policy target or just collapsing it.
+
+**Connection to other papers:** This is the statistical counterpart to TransZero (Track 1, 2026-08-10): both attack the sequential bottleneck of tree search for GPU throughput, but TransZero keeps the tree and parallelizes node expansion, while TSMCTS discards the tree for a particle filter and then re-imports the tree's root-selection discipline to fix what that costs. It builds directly on SPO's SMC planner and on Gumbel-MuZero's Sequential Halving root policy, using each as the baseline the other repairs.
+
+---
+
 ## 2026-08-24 (Monday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
 **Title:** NonZero: Interaction-Guided Exploration for Multi-Agent Monte Carlo Tree Search
 **Authors:** Sizhe Tang, Zuyuan Zhang, Mahdi Imani, Tian Lan
