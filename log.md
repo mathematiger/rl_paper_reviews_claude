@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-11 (Friday) - Track 3: Calibration of learned value/policy heads, uncertainty quantification in deep RL
+**Title:** Bellman Calibration for $V$-Learning in Offline Reinforcement Learning
+**Authors:** Lars van der Laan, Nathan Kallus
+**Venue/Year:** arXiv:2512.23694 (December 2025; v2 2026)
+**Link:** https://arxiv.org/abs/2512.23694
+
+**Summary:** Offline value learning stacks bootstrapping, function approximation and distribution shift on top of each other, so a fitted value predictor is usually justified only by assumptions nobody can check on the data at hand - Bellman completeness and realizability. The paper proposes a weaker but *checkable* reliability criterion instead: a value function is **Bellman calibrated** if, among the states whose predicted value is v, the average Bellman target is also v. Miscalibration then collapses into a scalar diagnostic, the Bellman calibration error, estimable from off-policy data via doubly robust estimates of the Bellman targets - so a value head can be audited without ever knowing the true V^pi. The constructive half is **Iterated Bellman Calibration**: a model-agnostic post-hoc wrapper that leaves the trained predictor frozen and fits a one-dimensional map of its own output, in histogram or isotonic form. The isotonic variant repeatedly isotonic-regresses the fitted Bellman targets onto the current predictions (pool-adjacent-violators, near-linear time), iterating because each recalibration moves the targets it is fitting. The theory gives finite-sample control of Bellman calibration error at one-dimensional nonparametric rates *without* Bellman completeness or value realizability, plus value-error bounds that separate statistical estimation, finite-iteration and approximation error - making explicit when recalibration genuinely improves value prediction and when its gains are capped by the information already in the base predictor or by insufficient coverage. Experiments pair linear and random-feature FQE with linear, histogram and isotonic calibrators.
+
+**Why this, why now:** This is the sequential-decision analogue of the post-hoc recalibration recipe you already use on a learned head - freeze the network, fit a one-dimensional affine or isotonic map on held-out data - with the crucial difference that the regression target is a bootstrapped Bellman target rather than a label, which is exactly the missing ingredient when the head being audited lives inside a control problem rather than a supervised one. The scalar Bellman calibration error is the reliability diagnostic ECE cannot give you for a value head, and the accompanying bound says precisely when the isotonic fix buys accuracy and when it only buys calibration - a distinction worth knowing before trusting recalibrated values in power grid control.
+
+**Connection to other papers:** It is the post-hoc counterpart of "Start Classifying: Categorical Critics for LLM Reinforcement Learning" (logged 2026-08-26): that paper improves a critic's ECE/Brier by changing the *training loss* (categorical HL-Gauss instead of scalar MSE), whereas this one leaves training untouched and repairs the head afterwards, so the two are composable rather than competing. The isotonic calibrator and its PAVA machinery come straight from the classical calibration lineage (Platt scaling, isotonic and Dirichlet calibration - the latter logged 2026-09-10), transplanted from a fixed label distribution to a moving bootstrapped target; the same authors have since extended the criterion to marginalized importance weighting (arXiv:2608.24858).
+
+---
+
 ## 2026-09-10 (Thursday) - Track 4: Calibration and uncertainty classics
 **Title:** Beyond temperature scaling: Obtaining well-calibrated multi-class probabilities with Dirichlet calibration
 **Authors:** Meelis Kull, Miquel Perelló-Nieto, Markus Kängsepp, Telmo Silva Filho, Hao Song, Peter Flach
