@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-12 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
+**Title:** A Distributional Perspective on Reinforcement Learning
+**Authors:** Marc G. Bellemare, Will Dabney, Rémi Munos
+**Venue/Year:** ICML 2017 (PMLR vol. 70, pp. 449-458); arXiv:1707.06887, July 2017
+**Link:** https://arxiv.org/abs/1707.06887 (PMLR: https://proceedings.mlr.press/v70/bellemare17a.html)
+
+**Summary** (150-250 words): Almost all of RL collapses the random return into its expectation. This paper asks what happens if you keep the whole random variable, and studies the distributional Bellman operator Z(s,a) := R(s,a) + γ Z(S', A') as an operator on distributions rather than on scalars. The theory is the interesting half. In the policy-evaluation setting the operator is a γ-contraction in the maximal p-Wasserstein metric, so value distributions converge to a unique fixed point Z^π - but it is *not* a contraction in KL, total variation, or Kolmogorov distance, so the choice of metric is load-bearing rather than cosmetic. In the control setting the result flips: the distributional optimality operator still contracts in expectation (means converge as usual), yet it is not a contraction in any metric over distributions, and the authors exhibit instability where the distributions fail to converge at all, because ties between optimal actions let the operator keep switching which return distribution it selects. The algorithm then deliberately departs from its own theory: Wasserstein loss cannot be minimized by unbiased sample gradients, so C51 fixes a support of 51 atoms on [V_min, V_max], applies the Bellman update, projects the shifted-and-scaled target back onto that support, and minimizes a KL divergence. Architecturally it is DQN with |A| × 51 output logits and a per-action softmax, acting greedily with respect to the distribution's mean - and it sets a new state of the art across the Atari 2600 suite.
+
+**Why this, why now:** It is a rare paper where the theory is genuinely surprising rather than confirmatory: the same operator that is a clean contraction for evaluation provably fails to contract for control, and the resulting instability is invisible to anyone only tracking means. It is also an honest account of a gap between theory and practice - the analysis is in Wasserstein, the implementation minimizes KL on a projected categorical support - a gap the paper states plainly and that later work closed by showing the projected operator contracts in the Cramér distance.
+
+**Connection to other papers:** It is the distributional counterpart of "The Value Function Polytope in Reinforcement Learning" (Track W3, 2026-08-29): both replace pointwise convergence arguments with the geometry of the space value objects live in, one studying the polytope traced by V^π and the other the metric space of return distributions. It extends the DQN architecture (Track W1, 2026-08-22) by swapping a scalar head for a categorical one, and is the paper whose downstream claims "Auditing the Risk Claims of Distributional Reinforcement Learning" (logged 2026-08-12) later put under scrutiny.
+
+---
+
 ## 2026-09-11 (Friday) - Track 3: Calibration of learned value/policy heads, uncertainty quantification in deep RL
 **Title:** Bellman Calibration for $V$-Learning in Offline Reinforcement Learning
 **Authors:** Lars van der Laan, Nathan Kallus
