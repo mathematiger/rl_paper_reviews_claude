@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-13 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
+**Title:** Invariant and Equivariant Graph Networks
+**Authors:** Haggai Maron, Heli Ben-Hamu, Nadav Shamir, Yaron Lipman
+**Venue/Year:** ICLR 2019; arXiv:1812.09902, December 2018
+**Link:** https://openreview.net/forum?id=Syx72jC9tm (arXiv: https://arxiv.org/abs/1812.09902)
+
+**Summary** (150-250 words): Equivariant architectures are usually built by guessing a plausible layer and checking it respects the symmetry. This paper instead asks for the *complete* answer: what is the full space of linear layers on graph data that commute with node relabelling? Graph data on k-tuples of nodes is a tensor in R^{n^k}, and a permutation of nodes acts on it by permuting all k axes simultaneously. Demanding equivariance turns the layer weights into the solution set of a linear fixed-point equation, and the authors solve it exactly: the solutions are spanned by the indicator tensors of the equivalence classes of the partition lattice on k+l indices. So a linear layer R^{n^k} -> R^{n^l} has dimension exactly the (k+l)-th Bell number, with bell(l) more for biases, and an orthogonal basis is given in closed form. For ordinary edge-valued graphs (k=l=2) that means invariant layers form a 2-dimensional space and equivariant layers a 15-dimensional one - fifteen parameters, and provably not a sixteenth. The count is independent of n, so one trained layer applies to graphs of every size for free. The architecture is then the obvious one: stack these layers with pointwise ReLU, cap with an invariant layer and an MLP. They prove the second-order model can approximate any message-passing network, and report graph-classification results comparable to the state of the art.
+
+**Why this, why now:** It is the rare paper that closes a design question rather than adding to it: the entire space of equivariant linear layers is enumerated, and the answer turns out to be pure combinatorics - Bell numbers, counting set partitions, falling out of a symmetry requirement with no graph-specific input. The independence from n is the elegant part: size-generalisation is not engineered, it is forced by the symmetry.
+
+**Connection to other papers:** It is the constructive twin of "How Powerful are Graph Neural Networks?" (Track W4, 2026-08-16): Xu et al. show message passing is capped at 1-WL, while this paper builds the layer space that lets you climb past that cap by raising the tensor order - a link made explicit in the authors' own follow-up, Provably Powerful Graph Networks, which ties k-order networks to the k-WL hierarchy. It attacks the ceiling from the opposite side to the curvature work on over-squashing (Track W4, 2026-08-30): that paper keeps message passing and asks which graphs strangle it, whereas this one abandons the message-passing hypothesis class altogether for the largest one the symmetry permits.
+
+---
+
 ## 2026-09-12 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
 **Title:** A Distributional Perspective on Reinforcement Learning
 **Authors:** Marc G. Bellemare, Will Dabney, Rémi Munos
