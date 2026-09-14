@@ -4,6 +4,20 @@ Diverse rollout workers, intrinsic motivation, and evolutionary baselines (e.g. 
 
 ---
 
+## 2026-09-14 (Monday) - Track 6: Exploration strategies (evolutionary baselines vs RL)
+**Title:** Harnessing Bounded-Support Evolution Strategies for Policy Refinement
+**Authors:** Ethan Hirschowitz, Fabio Ramos
+**Venue/Year:** arXiv preprint arXiv:2511.09923, November 2025 (v2) - The University of Sydney; Fabio Ramos also NVIDIA
+**Link:** https://arxiv.org/abs/2511.09923
+
+**Summary:** Evolution Strategies treat policy optimization as black-box search in parameter space: perturb the weights, evaluate returns, and recombine the perturbations into a finite-difference ascent direction. The standard recipe - OpenAI-ES and its CMA-ES relatives - draws Gaussian perturbations, whose unbounded tails occasionally displace parameters far enough to wreck an already-competent policy. That is tolerable when searching from scratch and destructive when refining. This paper targets exactly the late-training regime where on-policy RL stalls: once success rates are already high, PPO's gradients become noisy and low-signal, and further updates mostly add variance rather than performance. Triangular-Distribution ES (TD-ES) makes two changes. Perturbations are drawn from a bounded triangular distribution and applied antithetically in plus/minus pairs, so every candidate stays inside an explicit ball around the incumbent parameters - a hard trust region in parameter space rather than a soft penalty - while the antithetic pairing cancels first-order bias. Returns are then passed through a centered-rank transform before the finite-difference average, making the update invariant to reward scale and robust to outlier rollouts. The resulting update is gradient-free and embarrassingly parallel across workers. Deployed as stage two of a pipeline - PPO pretraining for early sample efficiency, TD-ES for refinement - it raises success rates on a suite of robotic manipulation tasks by 26.5% over PPO alone, cuts variance by roughly 83% relative to Gaussian-noise ES, and reaches 97.8% success on Open-Drawer.
+
+**Why this, why now:** Your CMA-ES agent is currently positioned as a separate baseline to be compared against a learned policy, and this paper's claim is that the more informative use of a bounded evolution strategy is as a *second stage on top of* a policy-gradient run - the same perturb-evaluate-recombine machinery, repointed from rival to refinement operator, which is cheap to try once the baseline exists. The bounded-support argument is also the concrete mechanism that makes this safe on a power-grid simulator: a hard cap on parameter displacement means no candidate in the population can be catastrophically worse than the incumbent, and the population evaluation is exactly the perturb-and-score pattern a pool of rollout workers already implements.
+
+**Connection to other papers:** This is the parameter-space counterpart to Coupled Policy Optimization (logged 2026-08-28): both conclude that exploratory workers must be tethered to the incumbent policy, but CPO enforces it with a soft KL penalty in policy space while TD-ES gets it for free from a distribution with compact support, so there is no constraint weight to tune. It inherits the centered-rank fitness shaping directly from OpenAI-ES (Salimans et al., 2017) and swaps only that method's Gaussian sampler, and it inverts the ordering used by K-Myriad (logged 2026-08-14), which runs the population *first* to jump-start RL, where TD-ES runs it last to finish a policy gradient cannot.
+
+---
+
 ## 2026-08-28 (Friday) - Track 6: Exploration strategies (diverse rollout workers)
 **Title:** Rethinking Policy Diversity in Ensemble Policy Gradient in Large-Scale Reinforcement Learning
 **Authors:** Naoki Shitanda, Motoki Omura, Tatsuya Harada, Takayuki Osa
