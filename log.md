@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-17 (Thursday) - Track 6: Statistical learning theory (VC theory, Rademacher complexity, bias-variance decompositions)
+**Title:** Neural Networks and the Bias/Variance Dilemma
+**Authors:** Stuart Geman, Elie Bienenstock, René Doursat
+**Venue/Year:** Neural Computation, Vol. 4, No. 1, pp. 1-58, January 1992 (MIT Press); DOI 10.1162/neco.1992.4.1.1
+**Link:** https://direct.mit.edu/neco/article/4/1/1/5624/Neural-Networks-and-the-Bias-Variance-Dilemma (author's free PDF: https://www.dam.brown.edu/people/geman/Homepage/Essays%20and%20ideas%20about%20neurobiology/bias-variance.pdf)
+
+**Summary:** Feedforward networks trained by backpropagation, the paper argues, are not a new kind of object but nonparametric regression estimators, and should be judged by the statistics of that class. The paper develops the now-standard decomposition: for squared error, the estimation error of a learned function f(x; D) relative to the true regression E[y|x] splits into a bias term (how far the average fit over training sets D sits from the truth) and a variance term (how much the fit moves as D is resampled). Nonparametric estimators - k-nearest-neighbour, Parzen kernels, regression trees, and neural nets alike - are designed to have asymptotically zero bias: given unlimited data they converge to the true regression for essentially any target. The dilemma is that this consistency is bought entirely with variance, and in high dimensions the variance decays so slowly with sample size that the asymptotic guarantee is practically empty. Finite-sample accuracy therefore requires deliberately introducing bias - through smoothing parameters, restricted architectures, weight decay, early stopping, or hard-wired invariances - so the design problem is not whether to be biased but which bias to choose. The authors illustrate this with artificial regression problems and handwritten-numeral recognition, comparing nearest-neighbour, kernel, tree and network estimators and showing how each method's tuning knob traces out the same trade curve. Their conclusion is that progress lies in representation - problem-specific structure built into the estimator - rather than in more data or more general learning machinery.
+
+**Why this, why now:** This is the primary source for the bias/variance decomposition the "Taxonomy of Calibration" paper leans on when it contrasts complexity-based rates with O(1/N) variational rates, and its central claim is exactly the choice faced when picking a post-hoc recalibration map: an affine/beta map is a high-bias, low-variance estimator that cannot represent an arbitrary miscalibration curve, while isotonic regression is the nonparametric alternative whose zero asymptotic bias is paid for in variance on a calibration split of a few thousand points. Geman et al.'s argument that consistency is worthless without a variance budget is the formal reason a more flexible recalibrator can worsen held-out ECE while fitting the calibration split better.
+
+**Connection to other papers:** It sits directly upstream of the Rademacher-complexity paper logged in this track on 2026-08-20: Bartlett and Mendelson supply a data-dependent capacity measure that controls the variance/estimation side of the split, whereas Geman et al. name the other side and argue that capacity control alone buys nothing unless the bias it imposes is the right one for the problem. It is also the paper modern double-descent work is written against - the U-shaped trade curve drawn here is precisely what heavily overparameterized networks were later observed to violate, which makes the original argument worth reading in its own words rather than through its textbook restatement.
+
+---
+
 ## 2026-09-16 (Wednesday) - Track 2: Conformal prediction for sequential decision-making
 **Title:** Conformal Policy Control
 **Authors:** Drew Prinster, Clara Fannjiang, Ji Won Park, Kyunghyun Cho, Anqi Liu, Suchi Saria, Samuel Stanton
