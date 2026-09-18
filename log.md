@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-18 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
+**Title:** Reinforcement Learning with Symbolic Reward Machines
+**Authors:** Thomas Krug, Daniel Neider
+**Venue/Year:** arXiv preprint (cs.LG / cs.AI), March 2026
+**Link:** https://arxiv.org/abs/2603.03068
+
+**Summary** (150-250 words): Reward machines encode sparse, temporally extended, non-Markovian reward as a finite automaton whose transitions are driven by propositional labels emitted alongside each observation. The practical bottleneck is that those labels do not come from the environment: for every new domain and task the user must hand-write a labeling function mapping raw states to an abstract alphabet, which breaks the standard RL interaction scheme and quietly encodes much of the task knowledge the automaton is supposed to represent. This paper proposes Symbolic Reward Machines (SRMs), a hybrid of a reward machine and a symbolic automaton: transitions are guarded by formulas over the raw observation itself, drawn from a chosen background logic, so the machine consumes the environment's standard output directly and no labeling function is needed. Two algorithms accompany the model. QSRM is the control side - Q-learning over the product of state and SRM node, usable with existing environments out of the box. LSRM is the inference side, learning the SRM itself in two regimes: one where the candidate guard formulas are supplied by the user, and a harder one where only formula templates are given and the guards' parameters are inferred from traces. Empirically the SRM methods beat plain RL baselines and match existing reward-machine methods that were handed a labeling function, while keeping the automaton human-readable as an interpretable description of the task structure.
+
+**Why this, why now:** Your reward-machine work has to bridge automaton-level task structure and a continuous, high-dimensional power-grid observation (line loadings, topology vectors), and the labeling function is exactly where that bridge is currently hand-built - SRM guards over raw observations, plus LSRM's template-based inference of those guards, attack that step directly rather than enriching the automaton above it.
+
+**Connection to other papers:** Where Pushdown Reward Machines (logged 2026-08-19) and Expressive Temporal Specifications for Reward Monitoring (2026-09-04) extend expressiveness upward - richer automaton class, richer specification language - SRMs extend it downward, at the input interface, so the three are orthogonal and in principle composable. It also complements the model-based NMRDP line (2026-08-05), which assumes the labeled reward-machine structure is already available and asks how to plan with it.
+
+---
+
 ## 2026-09-17 (Thursday) - Track 6: Statistical learning theory (VC theory, Rademacher complexity, bias-variance decompositions)
 **Title:** Neural Networks and the Bias/Variance Dilemma
 **Authors:** Stuart Geman, Elie Bienenstock, René Doursat
