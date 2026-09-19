@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-19 (Saturday) - Track W1: Influential RL breakthroughs
+**Title:** Discovering faster matrix multiplication algorithms with reinforcement learning
+**Authors:** Alhussein Fawzi, Matej Balog, Aja Huang, Thomas Hubert, Bernardino Romera-Paredes, Mohammadamin Barekatain, Alexander Novikov, Francisco J. R. Ruiz, Julian Schrittwieser, Grzegorz Swirszcz, David Silver, Demis Hassabis, Pushmeet Kohli (DeepMind)
+**Venue/Year:** Nature 610 (7930), 47-53 (6 October 2022)
+**Link:** https://www.nature.com/articles/s41586-022-05172-4 (code and discovered factorizations: https://github.com/google-deepmind/alphatensor)
+
+**Summary** (≈235 words): Multiplying two n×n matrices is equivalent to decomposing a fixed 3D tensor T_n into a sum of rank-1 terms; the number of terms is exactly the number of scalar multiplications the resulting algorithm needs. Strassen's 1969 rank-7 decomposition of T_2 started the field, but tensor rank is NP-hard in general and human progress on small cases has been glacial. AlphaTensor turns decomposition into a single-player game, *TensorGame*: the state is the residual tensor, a move is a triplet (u,v,w) with entries drawn from a small discrete set (e.g. {-2,...,2}), the transition subtracts u⊗v⊗w, and the episode ends when the residual is zero. Each step costs -1, so maximizing return minimizes rank; any terminal trajectory is a *provably correct* algorithm by construction. The agent is AlphaZero-style - sample-based MCTS guided by a network - but the action space is astronomically larger than Go's (on the order of 10^33 candidate triplets per move for 4×4), so the architecture matters: a transformer torso attending across the three tensor modes, an autoregressive policy head that emits factor entries token-by-token, and a distributional value head from which search draws a risk-seeking quantile. Training mixes self-play with synthetic demonstrations (random decompositions run backwards) and a change-of-basis augmentation that turns one target tensor into an effectively unbounded family of equivalent problems. Results: rank 47 for 4×4 in Z_2, beating Strassen's two-level rank 49 for the first time in 50 years; 96 for 5×5 in Z_2; 76 for 4×5-by-5×5 in standard arithmetic; thousands of non-equivalent solutions for a single target; and, when the reward is augmented with measured wall-clock time, algorithms 10-20% faster than standard implementations on a V100 and a TPU v2.
+
+**Why this, why now:** It is a genuinely surprising demonstration that search-plus-learning can do mathematics rather than play games: the discovered object is a certified algorithm, not a policy you must trust empirically, which makes the correctness story unusually clean for a deep RL result. The two design moves that made a 10^33-action space tractable - synthetic demonstrations generated backwards from known solutions, and symmetry-based basis augmentation that manufactures an unbounded training distribution from one problem instance - are elegant and reusable well beyond tensors.
+
+**Connection to other papers:** It is the AlphaZero recipe of this track's lineage (TD-Gammon's self-play, 2026-08-08; DQN's learned evaluation from raw state, 2026-08-22; AlphaStar's transformer-over-structured-objects and autoregressive action heads, 2026-09-05) pointed at a problem with no opponent and no environment - the "game" is a mathematical object, so the reward is exact and the outcome is verifiable. It also invited an orthogonal, non-learning answer: Kauers and Moosbauer's flip-graph search soon after pushed 5×5 in Z_2 to 95, a reminder that the RL agent's real contribution here was showing the solution space was far richer than assumed.
+
+---
+
 ## 2026-09-18 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
 **Title:** Reinforcement Learning with Symbolic Reward Machines
 **Authors:** Thomas Krug, Daniel Neider
