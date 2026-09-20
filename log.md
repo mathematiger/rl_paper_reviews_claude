@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-20 (Sunday) - Track W2: Influential GNN breakthroughs
+**Title:** Spectral Networks and Locally Connected Networks on Graphs (the ICLR/LeCun-page version is titled "Spectral Networks and Deep Locally Connected Networks on Graphs")
+**Authors:** Joan Bruna, Wojciech Zaremba, Arthur Szlam, Yann LeCun (NYU / City College of New York)
+**Venue/Year:** ICLR 2014 (Banff); arXiv:1312.6203, December 2013 (v3 2014)
+**Link:** https://arxiv.org/abs/1312.6203
+
+**Summary** (~240 words): A CNN is cheap because the grid has a translation group: one filter can be shared everywhere, and locality bounds its support. This paper asks what survives when the domain is an arbitrary graph, where no translation group exists, and answers with two constructions. The *spatial* one builds a multiscale hierarchical clustering of the graph: each layer connects a node only to a neighbourhood defined by the edge weights, and pooling is the clustering step that produces the next, coarser graph. It is local and cheap, but there is no weight sharing - every node carries its own filter coefficients. The *spectral* one takes the idea seriously through the convolution theorem: diagonalize the graph Laplacian L = D - W as L = VΛVᵀ, and define convolution as multiplication in that eigenbasis, x ↦ V diag(w) Vᵀ x, with the multipliers w as the learned parameters. On a ring graph V is the Fourier basis and this exactly recovers classical convolution, so the grid CNN falls out as a special case. Two problems follow, and their fixes are the interesting part. Spectral multipliers are not localized in space; but smoothness in frequency corresponds to spatial decay, so the authors parameterize w through a fixed cubic-spline/subsampling kernel, giving O(1) parameters per filter, independent of input size. Pooling becomes keeping the lowest-frequency eigenvectors. Experiments on a 400-pixel subsampled MNIST and on 4096 points of the unit sphere show graph layers learning grid-CNN-like structure, including from a graph estimated from data rather than given.
+
+**Why this, why now:** This is where "graph convolution" comes from, and it is the rare architecture paper whose motivation is a theorem rather than a benchmark: convolution is diagonal in the Fourier basis, the Fourier basis is the Laplacian eigenbasis, so on a graph *define* convolution that way and see what breaks. What breaks is instructive - the eigenbasis is tied to one graph, eigendecomposition is O(n³), and filters localize only if you constrain the spectrum - and each of those failure modes became a research programme. Reading it is a good corrective to treating message passing as the obvious or only starting point.
+
+**Connection to other papers:** It is the direct ancestor of the GCN logged on 2026-08-23: Defferrard et al. (2016) replaced the explicit eigendecomposition with Chebyshev polynomials in L, and Kipf & Welling then truncated that expansion at first order, collapsing this paper's spectral machinery into a normalized-adjacency matrix multiply - the whole lineage is one long exercise in approximating the object defined here. GAT (2026-08-09) is the orthogonal reaction: it abandons the shared global operator entirely so that filters transfer across graphs, precisely the property the spectral construction cannot have.
+
+---
+
 ## 2026-09-19 (Saturday) - Track W1: Influential RL breakthroughs
 **Title:** Discovering faster matrix multiplication algorithms with reinforcement learning
 **Authors:** Alhussein Fawzi, Matej Balog, Aja Huang, Thomas Hubert, Bernardino Romera-Paredes, Mohammadamin Barekatain, Alexander Novikov, Francisco J. R. Ruiz, Julian Schrittwieser, Grzegorz Swirszcz, David Silver, Demis Hassabis, Pushmeet Kohli (DeepMind)
