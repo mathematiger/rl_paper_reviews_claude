@@ -4,6 +4,21 @@ Power grids, scheduling, and network control - Grid2Op/L2RPN-adjacent, Flatland-
 
 ---
 
+## 2026-09-21 (Monday) - Track 5: Graph-structured / infrastructure RL
+**Title:** Event-Driven Reinforcement Learning Enables Long-Horizon Control in Semiconductor Fabrication
+**Authors:** Yavar Yeganeh, Mahsa Shekari, Nicla Frigerio, Daniele Pagano, Andrea Matta (Politecnico di Milano; STMicroelectronics)
+**Venue/Year:** arXiv:2606.10705, June 2026; accepted to IFAC World Congress 2026
+**Link:** https://arxiv.org/abs/2606.10705
+
+**Summary** (~210 words): A semiconductor fab is an interconnected network of hundreds of tools through which heterogeneous wafer lots travel across hundreds of processing steps, under stochastic processing times and hard operational constraints. Control decisions (what to dispatch where, when) are made at irregular moments and their consequences surface hundreds of decisions later, so the resulting problem is high-dimensional, heavily delayed, and genuinely long-horizon - exactly the regime where a naive fixed-timestep MDP formulation either wastes transitions on steps where nothing happened or blurs credit across them. The paper's core move is to stop treating time as a uniform clock. System evolution is modelled as an interconnected temporal process driven by *discrete events*, and the authors derive an event-driven temporal-difference formulation whose transitions are anchored to those events rather than to simulation ticks. Crucially the formulation is kept algorithm-agnostic: it is a redefinition of the TD target and the transition boundary, so standard model-free policy-optimisation methods drop into it unchanged. Control itself is posed as a *centralised* agent problem - one core policy coordinating system-wide decisions rather than a swarm of per-tool agents - with a multi-objective optimisation target. Several model-free algorithms are instantiated in this framework and evaluated on high-fidelity simulations of industry-real operating scenarios; agents trained both offline and online show consistent throughput and utilisation gains. Code is released under MIT.
+
+**Why this, why now:** The paper attacks the same structural problem as large-scale infrastructure control - a networked system where the vast majority of ticks are inconsequential, interventions are sparse and irregularly spaced, and the reward signal for an intervention arrives hundreds of steps later - and its answer is to move the transition boundary off the simulator clock and onto the events that actually change the system, which is a different lever than the usual ones (reward shaping, exploration schedules, action-space factorisation) and directly reshapes how credit is assigned over the horizon. That it is deliberately algorithm-agnostic, a change to the TD target rather than to the learner, makes it cheap to test against a power-grid control loop with the same sparse-intervention/delayed-consequence structure.
+
+**Connection to other papers:** This is an orthogonal axis to the two prior Track 5 decompositions: Fabrizio et al. (2026-08-07) factorises the *observation* spatially via a GNN over local topology with a high-level manager, and Castagna et al. (2026-09-07) factorises by *decision type* into coordinated dispatch/routing levels, while this paper keeps a single centralised policy and instead factorises the *time axis*, leaving the action space intact. It is also the natural counterpart to the temporally-extended reward structures of Track 4 - both are about credit assignment over non-uniform time, but one reshapes when a transition happens and the other reshapes what the reward depends on.
+
+---
+
+
 ## 2026-09-07 (Monday) - Track 5: Graph-structured / infrastructure RL
 **Title:** Towards Autonomous Railway Operations: A Semi-Hierarchical Deep Reinforcement Learning Approach to the Vehicle Rescheduling Problem
 **Authors:** Alberto Castagna, Stefan Zahlner, Adrian Egli, Christian Eichenberger, Daniel Boos, Manuel Meyer, Anton Fuxjäger
