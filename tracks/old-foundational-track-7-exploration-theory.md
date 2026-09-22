@@ -4,6 +4,20 @@ UCB/bandit foundations, posterior sampling, and bootstrapped/ensemble approaches
 
 ---
 
+## 2026-09-22 (Tuesday) - Track 7: Exploration theory (UCB/bandit foundations, bootstrapped/ensemble exploration)
+**Title:** Asymptotically Efficient Adaptive Allocation Rules
+**Authors:** Tze Leung Lai, Herbert Robbins (Columbia University / Stanford University)
+**Venue/Year:** Advances in Applied Mathematics, Vol. 6, No. 1, pp. 4-22, March 1985; DOI 10.1016/0196-8858(85)90002-8
+**Link:** https://doi.org/10.1016/0196-8858(85)90002-8 (open archive: https://www.sciencedirect.com/science/article/pii/0196885885900028)
+
+**Summary** (~230 words): The setting is sequential allocation among k populations with unknown reward distributions: at each step choose one arm, observe its reward, and maximise the expected total over n steps. Robbins had already shown in 1952 that rules converging to the best arm exist; what nobody had pinned down was the *price* of not knowing which arm is best. This paper answers that in both directions. The lower bound is the famous change-of-measure argument: for any "uniformly good" rule - one whose regret is o(n^a) for every a>0 across the whole parameter family - the expected number of pulls of a suboptimal arm j must satisfy liminf E[T_j(n)]/log n >= 1/KL(f_j, f*), so regret grows at least like log n times the sum of gaps divided by Kullback-Leibler divergences. The intuition is sharp: to justify abandoning arm j you must collect enough samples to statistically distinguish its distribution from the optimal one, and information theory prices that at 1/KL per log n. The matching upper bound is constructive. The authors build index rules that attach to each arm an *upper confidence bound* - the largest mean still plausible given that arm's data at a confidence level tied to log n - and, in a block/round-robin allocation scheme for the one-parameter exponential family, prove these attain the bound. This is the origin of the entire UCB family: optimism is not a heuristic, it is the shape of the optimal solution.
+
+**Why this, why now:** It is the primary source for the result that governs any multi-worker exploration budget: how a finite number of rollouts should be split across candidate actions, and what it provably costs to keep sampling ones you suspect are worse. It also gives the precise reason epsilon-greedy and uniform-over-workers allocation are not merely inelegant but asymptotically wrong - they spend a constant fraction of the budget on arms already distinguishable from the best, incurring linear rather than logarithmic regret - and it says the right per-arm sampling rate is set by a KL divergence rather than by a gap or a variance, which changes what a proxy score has to estimate to be worth trusting. For a control problem over a large discrete action set with an expensive simulator, that distinction is the difference between a budget that concentrates and one that leaks.
+
+**Connection to other papers:** This is the theoretical root of the UCT paper already in Track 3 (Kocsis & Szepesvari 2006): UCT is the Lai-Robbins/UCB1 index applied recursively at every node of a search tree, and its whole analysis rests on the finite-time restatement of this bound. It also forms the natural counterpoint to Bootstrapped DQN (Track 7, 2026-08-25): both are directed-exploration schemes that beat dithering, but they come from opposite traditions - optimism-in-the-face-of-uncertainty via explicit confidence bounds here, versus approximate posterior sampling via an ensemble there - and the asymptotic optimality established in this paper is the standard against which the posterior-sampling line is still measured.
+
+---
+
 ## 2026-08-25 (Tuesday) - Track 7: Exploration theory (UCB/bandit foundations, bootstrapped/ensemble exploration)
 **Title:** Deep Exploration via Bootstrapped DQN
 **Authors:** Ian Osband, Charles Blundell, Alexander Pritzel, Benjamin Van Roy
