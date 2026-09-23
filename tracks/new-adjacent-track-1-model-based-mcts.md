@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months on model-based RL and MCTS 
 
 ---
 
+## 2026-09-23 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
+**Title:** Planning in Branch-and-Bound: Model-Based Reinforcement Learning for Exact Combinatorial Optimization
+**Authors:** Paul Strang, Zacharie Alès, Côme Bissuel, Olivier Juan, Safia Kedad-Sidhoum, Emmanuel Rachelson (affiliations include EDF R&D and ISAE-SUPAERO)
+**Venue/Year:** AAAI 2026 (Singapore); arXiv:2511.09219, November 2025
+**Link:** https://arxiv.org/abs/2511.09219
+
+**Summary** (150-250 words): Mixed-Integer Linear Programming underlies a large share of real-world combinatorial optimization, and exact solvers attack it with branch-and-bound (B&B). The single biggest lever on solver efficiency is the variable selection heuristic deciding which fractional variable to branch on next. Prior learned branchers are either imitation learners cloning strong branching (expensive to supervise, capped by the expert) or model-free RL agents that must learn from the raw, brutally long-horizon B&B trajectory. PlanB&B instead learns an internal model of B&B dynamics and plans inside it. Architecturally it is a MuZero-style triple: a representation network encoding the current MILP node - as the standard bipartite variable/constraint graph - into a latent vector; a prediction network emitting a branching policy prior and a value estimate; and a dynamics network mapping (latent state, branching variable) to the latent states of the two resulting child nodes *without solving any LP relaxation*. The learned model is explicitly value-equivalent: it is not asked to reconstruct the true B&B node, only to preserve whatever is needed for policy improvement, which is what makes an abstract latent MDP over an otherwise intractable state space viable. Gumbel Search, a low-simulation-budget MCTS variant, then rolls out imagined branching trajectories in that latent space to produce an improved policy target. On four standard benchmarks - set covering, combinatorial auctions, maximum independent set and multiple knapsack - PlanB&B beats prior RL branchers (DQN-tMDP, PG-tMDP, DQN-Retro) and SCIP's reliability pseudocost branching, and rivals the imitation-learning expert.
+
+**Why this, why now:** The load-bearing move is planning over a *combinatorial* discrete action set (which variable to branch on) with a learned latent transition model that skips the expensive true environment step - the same bargain you face whenever a simulator call over a grid configuration is the bottleneck, and the benchmark is a strong classical heuristic rather than a weak baseline. Its Gumbel Search backbone is also the reference point for search under a small simulation budget, which is the regime power-grid topology control actually operates in.
+
+**Connection to other papers:** It shares the Gumbel/Sequential-Halving root-budget machinery that TSMCTS (Track 1, 2026-09-09) takes apart statistically, and answers the same "combinatorial action space defeats naive expansion" problem as NonZero (Track 1, 2026-08-24) from the opposite side: NonZero narrows the candidate set with a bandit proposal rule, whereas PlanB&B keeps the full candidate set and makes each simulated expansion cheap by learning a value-equivalent dynamics model - the value-equivalence principle from the model-based theory track applied to a solver.
+
+---
+
 ## 2026-09-09 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
 **Title:** Twice Sequential Monte Carlo for Tree Search
 **Authors:** Yaniv Oren, Joery A. de Vries, Pascal R. van der Vaart, Matthijs T. J. Spaan, Wendelin Böhmer
