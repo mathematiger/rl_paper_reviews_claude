@@ -4,6 +4,20 @@ What a learned model for planning must actually capture: value equivalence, deci
 
 ---
 
+## 2026-09-24 (Thursday) - Track 8: Value equivalence and model-based RL theory
+**Title:** Metrics for Finite Markov Decision Processes
+**Authors:** Norman Ferns, Prakash Panangaden, Doina Precup (School of Computer Science, McGill University)
+**Venue/Year:** Proceedings of the 20th Conference on Uncertainty in Artificial Intelligence (UAI 2004), pp. 162-169
+**Link:** https://arxiv.org/abs/1207.4114
+
+**Summary** (~250 words): Bisimulation, imported into MDPs from concurrency theory, calls two states equivalent when they earn the same immediate reward under every action and transition with the same probability into every equivalence class. It is the exact notion of "behaviourally identical", and it licenses lossless state aggregation - but it is brittle: perturb one transition probability by 1e-6 and two bisimilar states become distinguishable, so on any MDP estimated from data the relation degenerates to the identity. This paper replaces the relation with a pseudometric that degrades gracefully. The construction is an operator F on the lattice of pseudometrics, `F(d)(s,s') = max_a [ c_R |r_s^a - r_{s'}^a| + c_T * T_K(d)(P_s^a, P_{s'}^a) ]`: the worst case over actions of a reward gap plus the Kantorovich (Wasserstein) distance between successor distributions, where the transport cost is the current pseudometric d itself, which makes the definition recursive. F is monotone and w-continuous, so its iterates from the zero pseudometric form a chain converging to a least fixed point d_fix, and states at distance zero are exactly the bisimilar ones - the metric strictly refines the relation rather than replacing it. The load-bearing theorem is quantitative: provided gamma <= c_T, `c_R |V*(s) - V*(s')| <= d_fix(s,s')`. A companion theorem bounds the optimal-value error from aggregating an entire epsilon-ball into a single state by `2 epsilon c_R / (1-gamma)`, with a sharper version driven by average intra-cluster distance. Each Kantorovich evaluation is a min-cost flow LP solvable in O(|S|^2 log|S|) (Orlin 1988), so d_fix is genuinely computable, and experiments on a small MDP show the fixed-point bounds are far tighter than the naive estimate.
+
+**Why this, why now:** The mechanism worth having is the theorem, not the metric: this is the primary source for a *computable* certificate that collapsing two configurations costs at most d_fix/c_R in optimal value, which is the guarantee any pruning or aggregation rule needs before it discards part of a combinatorially large discrete action or state set - and in power grid topology control the great majority of configurations are behaviourally near-identical, so the whole question is which ones can be merged without losing the good one. It also makes the opposite failure precise: because the recursion transports d through successor distributions, two states that look interchangeable one step out can sit far apart in d_fix, so a similarity score computed from immediate features alone carries no such bound behind it.
+
+**Connection to other papers:** Read against The Value Equivalence Principle (Track 8, 2026-08-27), the two are orthogonal quotients of the same intuition: Grimm et al. quotient the *model* space, calling two models equivalent when they induce identical Bellman updates over a chosen set of policies and value functions, whereas Ferns et al. quotient the *state* space and do it quantitatively - exact bisimulation is merely the zero set of the metric, and everything useful happens at positive distance. The Kantorovich recursion here is also the direct ancestor of later deep bisimulation-metric objectives, which train an encoder so that latent distances approximate d_fix instead of computing it by LP.
+
+---
+
 ## 2026-08-27 (Thursday) - Track 8: Value equivalence and model-based RL theory
 **Title:** The Value Equivalence Principle for Model-Based Reinforcement Learning
 **Authors:** Christopher Grimm, André Barreto, Satinder Singh, David Silver
