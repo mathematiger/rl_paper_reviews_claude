@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-25 (Friday) - Track 3: Calibration of learned value/policy heads, uncertainty quantification in deep RL
+**Title:** Distributional Process Reward Models: Calibrated Prediction of Future Rewards via Conditional Optimal Transport
+**Authors:** Rachel Ma, Dylan Hadfield-Menell (MIT CSAIL), Kristjan Greenewald (IBM Research / MIT-IBM Watson AI Lab)
+**Venue/Year:** arXiv:2605.06785 (v1 7 May 2026, v2 12 May 2026)
+**Link:** https://arxiv.org/abs/2605.06785
+
+**Summary** (~240 words): A process reward model is a learned head that reads a partial trajectory and emits a scalar meant to be the probability that continuing from here succeeds - a value head on a prefix. The paper's premise is that these heads are systematically optimistic and poorly calibrated, and that this is not a cosmetic defect: any procedure that spends compute according to the predicted probability degenerates when the probability is wrong. Rather than fit the usual one-dimensional recalibration map, the authors learn a *conditional* quantile function. The construction adapts conditional optimal transport (Bunne et al. 2022): two partially input-convex neural networks parameterise the dual Kantorovich potentials, the transport map is the gradient of the convex potential, and convexity in the source variable makes that gradient monotone - so the learned map is a valid quantile function by construction and cannot produce crossing quantiles. Conditioning is on the head's own hidden state h, pushed through a small MLP before entering each PICNN, so the correction is feature-dependent rather than a single global curve; queries Q(beta | h) at any confidence level beta need no retraining. Calibration is measured by Brier score, 12-bin ECE, and weighted quantile (pinball) loss over 11 levels, against the raw head and a quantile-regression head with 11 fixed levels. On MATH-500 the OT map gives roughly +43.6% Brier over the raw head and +37.3% WQL over quantile regression. Downstream, per-instance budget allocation driven by a confidence bound turns a flat cost-accuracy curve into a smooth monotone one, reaching near-ceiling accuracy at about 10% of the maximum budget for the stronger models. Stated limits: the calibration inherits the base head's ranking quality, is sensitive to distribution shift, and has noisy tails because targets come from finitely many rollouts.
+
+**Why this, why now:** This is the feature-conditional version of the recalibration step - instead of fitting one affine or isotonic curve on the head's scalar output, the map is conditioned on the hidden state and returns a whole quantile function, so you can read off a lower confidence bound at a chosen level and use *that* rather than the point estimate to decide how large a candidate set has to be. The instance-adaptive budget experiment is the argument that matters here: it shows the miscalibrated head fails not by having bad ECE but by making every instance look equally hard, which is exactly the failure mode when a probabilistic head is supposed to tell you which situations on a grid need a wide candidate set and which need one action.
+
+**Connection to other papers:** Directly extends the post-hoc line of this track - Bellman Calibration for V-Learning (Track 3, 2026-09-11) fits a one-dimensional histogram or isotonic map on the predicted value alone and corrects the conditional mean; here the map is conditioned on the representation and corrects the whole conditional distribution, at the cost of the distribution-free finite-sample guarantee van der Laan and Kallus retain. It is orthogonal to Categorical Critics (Track 3, 2026-08-26), which buys calibration at training time by making the head categorical, whereas this leaves the trained head untouched and repairs it afterwards - the two compose.
+
+---
+
 ## 2026-09-24 (Thursday) - Track 8: Value equivalence and model-based RL theory
 **Title:** Metrics for Finite Markov Decision Processes
 **Authors:** Norman Ferns, Prakash Panangaden, Doina Precup (School of Computer Science, McGill University)
