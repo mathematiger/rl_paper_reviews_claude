@@ -4,6 +4,20 @@ Elegant proofs, surprising theoretical connections, and foundational frameworks 
 
 ---
 
+## 2026-09-26 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
+**Title:** A Theory of Regularized Markov Decision Processes
+**Authors:** Matthieu Geist, Bruno Scherrer, Olivier Pietquin
+**Venue/Year:** ICML 2019, PMLR 97:2160-2169 (arXiv:1901.11275, v1 Jan 2019, v2 Jun 2019)
+**Link:** https://arxiv.org/abs/1901.11275
+
+**Summary** (~250 words): Entropy and KL penalties are everywhere in deep RL - soft Q-learning, stochastic actor-critic, TRPO, DPP - but each was derived on its own terms. This paper argues they are one object viewed from different angles, and that the object is the Legendre-Fenchel transform. Fix a strongly convex regularizer `Omega` on the simplex of action distributions; its convex conjugate `Omega*(q_s) = max_{pi_s in Delta_A} <pi_s, q_s> - Omega(pi_s)` replaces the max in the Bellman optimality operator, and - the whole trick - the argmax comes back as a gradient: the regularized greedy policy is exactly `pi' = grad Omega*(q)`. Everything else follows from properties of conjugates. Strong convexity makes that greedy policy unique and Lipschitz in q instead of a discontinuous argmax; bounding `L_Omega <= Omega <= U_Omega` bounds the regularization bias, `v* - (U_Omega - L_Omega)/(1-gamma) <= v_{pi*_Omega} <= v*` (Thm 2). Negative entropy recovers log-sum-exp and softmax as the special case. The authors then insert this into modified policy iteration (m evaluation steps per improvement; m=1 is value iteration, m=infinity policy iteration), and in the second half replace the fixed regularizer with a Bregman divergence to the *previous* policy - Mirror Descent MPI, in a type 1 (regularized evaluation) and type 2 (unregularized evaluation) variant. TRPO is type 2 with KL and m=infinity; DPP is a reparameterisation of type 1 with m=1. The payoff is in the analysis: the regret bound has approximation errors entering as a moving average, `(2 E_{K-i} + E'_{K-i})/K` with `E_i = sum_j ||eps_j||`, rather than as a gamma-discounted sum of absolute errors - so errors can compensate each other and, as the authors put it, it is no longer the last iterations that have the highest influence on the regret. The price is a term `(1 - gamma^K) R_Omega^{pi_0} / (1-gamma)^2` carrying the initial Bregman divergence, a quadratic rather than linear horizon factor, which does not vanish. The paper is purely theoretical - no experiments.
+
+**Why this, why now:** One classical object from convex analysis - the conjugate and its gradient - reorganises a pile of separately-motivated deep RL algorithms into instances of a single scheme, and then earns something the unregularized theory cannot state: that approximation errors *average* instead of accumulate, which inverts the standard approximate-DP intuition that the last iterations matter most. It is also unusually clean reading for a theory paper: almost every result is two or three properties of the Legendre-Fenchel transform applied in sequence, so the proofs stay short and the mechanism stays visible.
+
+**Connection to other papers:** Todorov's Linearly-Solvable Markov Decision Problems (Track W3, 2026-08-15) is the special case that starts this story - penalising KL to a passive dynamics is one choice of `Omega`, and the linear Bellman equation he obtains is the exponential-coordinates view of the log-sum-exp conjugate that appears here in general form. Read against The Value Function Polytope (Track W3, 2026-08-29), the two examine the same geometry from opposite ends: the polytope's corners and edges come from the piecewise-linear argmax, which is precisely what this paper smooths into a differentiable `grad Omega*`.
+
+---
+
 ## 2026-09-12 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
 **Title:** A Distributional Perspective on Reinforcement Learning
 **Authors:** Marc G. Bellemare, Will Dabney, Rémi Munos
