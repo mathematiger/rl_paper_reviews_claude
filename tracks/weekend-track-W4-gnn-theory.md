@@ -4,6 +4,20 @@ Expressivity, over-smoothing/over-squashing, connections to Weisfeiler-Leman, sp
 
 ---
 
+## 2026-09-27 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
+**Title:** What graph neural networks cannot learn: depth vs width
+**Authors:** Andreas Loukas
+**Venue/Year:** ICLR 2020; arXiv:1907.03199 (v1 July 2019, v2 January 2020)
+**Link:** https://arxiv.org/abs/1907.03199
+
+**Summary** (150-250 words): Expressivity work on GNNs usually asks which graphs a network can *distinguish*, and answers inside the Weisfeiler-Leman hierarchy. This paper asks a different question: given a budget of depth d (layers) and width w (bits of node state / message), what can a message-passing GNN compute at all? Two results. First, a universality theorem: message-passing GNNs are Turing universal over connected graphs when four conditions hold jointly — nodes carry unique identifiers, the message and update functions are themselves Turing-complete, depth is at least the graph diameter, and width is unbounded. Message passing is therefore not intrinsically weak; it is weak *under budget*. Second, and the load-bearing contribution, an impossibility technique: a GNN of depth d and width w can be simulated by d rounds of the CONGEST distributed-computing model with O(w + log n)-bit messages, so every CONGEST round/bandwidth lower bound transfers directly into a GNN capacity bound. The result is a table of ~14 lower bounds: odd-cycle detection needs dw = Ω(n/log n), even-cycle detection Ω(√n/log n); diameter computation dw = Ω(n/log n); minimum spanning tree, minimum cut and subgraph verification (connectivity, bipartiteness, s-t cuts) d√w = Ω(√n/log n); minimum vertex cover, maximum independent set and perfect coloring dw = Ω(n²/log²n) at constant width. Approximation barely helps: 3/2-approximate diameter and 2-approximate girth still cost Ω(√n/log n). The architectural takeaway is that the product dw — "capacity" — is the resource to budget, and that discriminative node attributes are what lift a network off the anonymous ceiling.
+
+**Why this, why now:** The central move is genuinely delightful: read a GNN as a distributed algorithm running on its own input graph, then import three decades of CONGEST communication-complexity lower bounds wholesale, turning open ML questions into settled theorems. It also reframes the expressivity debate from "which graphs can we tell apart" to "how many bits must travel how far," a sharper resource account that bites hardest exactly on the large, long-diameter graphs that infrastructure applications such as power grids produce.
+
+**Connection to other papers:** Within this track it is the orthogonal complement to Xu et al.'s GIN, which fixes the ceiling for *anonymous* message passing at 1-WL: Loukas shows that even after unique IDs and Turing-complete layers lift that ceiling entirely, depth × width remains the binding constraint. Its diameter- and √n-scaled bounds sit alongside Topping et al.'s curvature account of over-squashing as a communication-complexity, rather than geometric, explanation of why long-range tasks fail.
+
+---
+
 ## 2026-09-13 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
 **Title:** Invariant and Equivariant Graph Networks
 **Authors:** Haggai Maron, Heli Ben-Hamu, Nadav Shamir, Yaron Lipman
