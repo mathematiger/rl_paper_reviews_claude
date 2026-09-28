@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-28 (Monday) - Track 6: Exploration strategies (uncertainty-guided search vs intrinsic motivation)
+**Title:** Decoupling Exploration and Policy Optimization: Uncertainty Guided Tree Search for Hard Exploration
+**Authors:** Zakaria Mhammedi, James Cohan
+**Venue/Year:** arXiv preprint arXiv:2603.22273, v1 March 2026 (v4 May 2026)
+**Link:** https://arxiv.org/abs/2603.22273
+
+**Summary:** Hard-exploration Atari games remain the canonical failure case for intrinsic motivation, because one curiosity bonus is asked to do two jobs at once - drive the search and shape the policy gradient - and the two interfere. This paper separates them. Phase I abandons RL entirely and runs a population-based tree search, Go-With-Uncertainty (GowU), adapted from Aldous and Vazirani's 1994 Go-With-The-Winner: particles take random actions from the current frontier, and periodically the failures are reset onto a "winner" state. The winner rule is the load-bearing design choice - rank first by accumulated reward, then break ties by epistemic uncertainty, estimated cheaply by Random Network Distillation prediction error used as an *oracle* rather than as a reward bonus. Particles are organised into parallel groups that synchronise periodically, with lagging groups reset onto global winners to escape local optima. Phase II distills the discovered trajectories into a deployable policy by supervised learning under a backward curriculum: the agent starts near the end of a found trajectory, and the start state walks backwards until the task is solved from scratch. On Montezuma's Revenge the search finds trajectories scoring above 98,000 within 400M frames, against roughly 43,000 for Go-Explore and under 10,000 for RND-only baselines; the distilled policy averages 196,312. Pitfall! and Venture are also reported as state of the art by a wide margin, and the same search in continuous action space solves sparse-reward Adroit manipulation and AntMaze directly from images, with no demonstrations or offline data. Like Go-Explore, it assumes a resettable simulator.
+
+**Why this, why now:** Your multi-worker exploration pool already hands workers scripted prefixes and ranks continuations with an epsilon-greedy TD-error proxy; GowU is essentially that architecture stated as an algorithm - workers reset onto shared frontier states, selected by accumulated reward with a cheap learned-uncertainty signal as the tiebreaker - and its central claim is that an uncertainty estimate is more useful as a *selection rule over workers* than as a bonus added to the reward. The resettable-simulator assumption that limits Go-Explore-style methods on real systems costs nothing in a power-grid simulator, where any snapshot can be restored.
+
+**Connection to other papers:** It is the reward-guided inverse of K-Myriad (logged 2026-08-14): both drive large parallel populations, but K-Myriad specialises workers to maximise collective state entropy before any reward is seen, whereas GowU lets accumulated reward drive selection and demotes novelty to a tiebreaker. Where Coupled Policy Optimization (logged 2026-08-28) tethers exploratory workers to the incumbent in *policy* space, GowU tethers them in *state* space by resetting onto winners, and it repurposes Burda et al.'s RND from an intrinsic reward into a pure ranking oracle.
+
+---
+
 ## 2026-09-27 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
 **Title:** What graph neural networks cannot learn: depth vs width
 **Authors:** Andreas Loukas
