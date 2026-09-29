@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-29 (Tuesday) - Track 1: Policy gradient / actor-critic foundations
+**Title:** Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning
+**Authors:** Ronald J. Williams
+**Venue/Year:** Machine Learning, vol. 8, no. 3-4, pp. 229-256, Springer, 1992
+**Link:** https://link.springer.com/article/10.1007/BF00992696 (DOI 10.1007/BF00992696)
+
+**Summary:** This is the primary source for the score-function (likelihood-ratio) policy gradient in RL. Williams studies networks whose output units are *stochastic*: unit i draws its output y_i from a distribution g_i(xi | w^i, x^i) fixed by its weights and inputs, making the network a parameterised action distribution rather than a deterministic map. He then defines a whole *class* of learning rules - REINFORCE algorithms - by the template Δw_ij = alpha_ij (r - b_ij) e_ij, with r the scalar reinforcement, b_ij a baseline, and e_ij = ∂ ln g_i / ∂w_ij the "characteristic eligibility" of that weight. The central result (Theorem 1) is that *any* rule of this form has expected update whose inner product with the true gradient of expected reinforcement is non-negative, and is exactly proportional to that gradient at constant learning rates: the algorithm performs stochastic gradient ascent on E{r} without ever forming an explicit gradient estimate. A second result shows the baseline may be any quantity conditionally independent of y_i, so comparison against a running average of past reinforcement cuts variance while leaving the update unbiased - the direct ancestor of the advantage function. Two instances are worked out: Bernoulli-logistic units recover the existing A_{R-I} rule, and Gaussian units give a rule that adapts the *width* sigma of the action distribution by the same formula, making the exploration scale a learned parameter. Finally, eligibilities are computable by ordinary backpropagation, and the result extends to episodic tasks, where summing eligibilities over an episode yields an unbiased gradient of expected total return.
+
+**Why this, why now:** Two mechanisms in your day-to-day stack are literally theorems in this paper: the baseline subtraction that makes a value head a variance reducer rather than a bias source, and the Gaussian-unit result that treats the temperature/width of the sampling distribution as a parameter carried by the same gradient rather than a hand-set exploration knob - the gradient-based counterpart to tuning a population's spread in a derivative-free search baseline. It also states the minimal interface a policy-gradient learner needs: a differentiable log-density and one global scalar, which is exactly the regime a large structured action space such as power grid topology control forces you into, since no per-action supervised target exists.
+
+**Connection to other papers:** This is the immediate-reward ancestor of Sutton, McAllester, Singh and Mansour (logged 2026-08-04), whose policy gradient theorem replaces Williams' Monte Carlo return with Q^pi and lifts the argument to the full discounted and average-reward MDP; Konda and Tsitsiklis (logged 2026-09-01) then supply the convergence proof Williams never attempted. Read together the three are one chain: Williams says the estimator is unbiased, Sutton et al. say you may substitute a compatible critic for the return without adding bias, and Konda-Tsitsiklis say the resulting two-timescale scheme actually converges.
+
+---
+
 ## 2026-09-28 (Monday) - Track 6: Exploration strategies (uncertainty-guided search vs intrinsic motivation)
 **Title:** Decoupling Exploration and Policy Optimization: Uncertainty Guided Tree Search for Hard Exploration
 **Authors:** Zakaria Mhammedi, James Cohan
