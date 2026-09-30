@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-09-30 (Wednesday) - Track 2: Conformal prediction for sequential decision-making
+**Title:** Conformal Path Reasoning: Trustworthy Knowledge Graph Question Answering via Path-Level Calibration
+**Authors:** Shuhang Lin, Chuhao Zhou, Xiao Lin, Zihan Dong, Kuan Lu, Zhencan Peng, Jie Yin, Dimitris N. Metaxas
+**Venue/Year:** arXiv:2605.08077 (v1 8 May 2026, v2 16 June 2026), 13 pages
+**Link:** https://arxiv.org/abs/2605.08077
+
+**Summary** (~250 words): Multi-hop reasoning over a graph is a sequential decision problem: at each hop the agent picks which relation to expand, and the set it keeps at hop k decides what is reachable at hop k+1. Prior conformal work here calibrates *per hop*, and the paper's diagnosis is that this is invalid rather than merely loose - because the score at hop k is a function of the previous prediction set, S_k = f(x, C_{k-1}), calibration queries are coupled through a Markov dependency chain and permutation invariance fails. Two fixes follow. First, move the calibration unit: query-exchangeable conformal prediction takes an entire reasoning episode as one calibration point, with nonconformity score S(q) = min over correct-answer-terminating paths of the learned path score (+infinity if none is retrieved), and threshold tau_alpha the (1-alpha) empirical quantile. Queries are i.i.d. and retrieval/scoring deterministic, so exchangeability survives and split-conformal theory gives P(set contains at least one correct path) >= 1 - alpha (Thm 4.1). Second, replace the raw semantic-similarity score, which cannot separate correct paths from plausible wrong ones and so inflates set size, with a learned one: RCVNet, a FiLM-conditioned head over query/relation/path embeddings, trained offline on trajectories collected by *PUCT* tree search - visit-count exploration with a semantic prior - under a pairwise Softplus ranking loss on positives against hard negatives that share a prefix and then diverge. Across WebQSP, CWQ, PQ and PQL this gives roughly 45% higher empirical coverage at 52% smaller sets than conformal baselines; on CWQ at alpha=0.5, 50.2% coverage with 8.35 paths where the prior state of the art needs 120.2 and still misses its guarantee.
+
+**Why this, why now:** Two mechanisms transfer directly. One is the exchangeability argument: whenever a calibrated set at one step determines the candidates available at the next, per-step calibration silently breaks the guarantee, and the fix is to make the whole episode the calibration unit with a min-over-correct-candidates score - the same structural trap that appears in any multi-step candidate-filtering scheme on a graph. The other is that the recall-versus-size frontier is governed far more by *what* is scored than by the conformal wrapper: swapping a similarity heuristic for a head trained on search-generated positive/hard-negative pairs bought both higher coverage and a halving of set size at once, which is the only way out of the usual tradeoff, and the hard negatives are prefix-sharing near-misses - the analogue of two topology configurations on a power grid that agree for several switching steps and then diverge.
+
+**Connection to other papers:** It is the graph-structured counterpart to *Conformal Prediction Beyond the Horizon* (Track 2, 2026-08-31): both diagnose a broken exchangeability assumption inside a sequential process and repair it by re-choosing the calibration unit - weighted subsampling of temporally adjacent replay samples there, whole-query aggregation here. Against Zhu et al.'s action-conditional sets (Track 2, 2026-08-17) it moves in the opposite direction on conditioning granularity: Zhu et al. refine a marginal guarantee down to each individual action, whereas this paper deliberately coarsens from per-hop to per-episode to regain validity, and it borrows the PUCT rule from the Track 1 tree-search lineage to generate calibration data rather than to act.
+
+---
+
 ## 2026-09-29 (Tuesday) - Track 1: Policy gradient / actor-critic foundations
 **Title:** Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning
 **Authors:** Ronald J. Williams
