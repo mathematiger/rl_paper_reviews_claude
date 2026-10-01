@@ -4,6 +4,20 @@ Classic results on why value-based RL with function approximation can fail - div
 
 ---
 
+## 2026-10-01 (Thursday) - Track 2: Value-based RL foundations and function-approximation divergence results
+**Title:** Issues in Using Function Approximation for Reinforcement Learning
+**Authors:** Sebastian Thrun, Anton Schwartz
+**Venue/Year:** Proceedings of the Fourth Connectionist Models Summer School, Lawrence Erlbaum, Hillsdale NJ, Dec. 1993
+**Link:** https://publications.ri.cmu.edu/storage/publications/pub_files/pub1/thrun_sebastian_1993_1/thrun_sebastian_1993_1.pdf
+
+**Summary** (~240 words): The convergence proofs for Q-learning available in 1993 all assumed exact table lookup, yet practitioners were combining Q-learning with neural networks and reporting failures *even when* the approximator was expressive enough to represent a near-optimal value function. This paper isolates one mechanism for that gap. Model the stored values as Q_approx(s',a) = Q_target(s',a) + Y, with Y zero-mean approximation noise. The Bellman update takes a max over actions, and max does not preserve the zero-mean property of its operands' errors: E[max of noisy values] >= max of true values. So zero-mean generalization error becomes a *positive-mean* update error. The Lemma quantifies it for noise uniform on [-e, e] with n applicable actions sharing one target value: the expected overestimation is exactly c = e(n-1)/(n+1), and the Corollary brackets the general case in [0, c]. The bias is worst where many actions have near-equal value and their error bars overlap, mild where one action is clearly best. Section 3 then iterates the update. A necessary condition for recovering an optimal policy is that Q-values increase monotonically along an optimal path; discounting makes neighboring values differ by only gamma^(L-1) - gamma^L, which shrinks exponentially in path length L, while the bias c does not shrink at all. Theorems 1-3 convert this into explicit failure conditions - bounds on gamma and on the admissible approximator error (for L=60, n=5: e < 0.00943). Six function approximators on a simulated robot navigation task reproduce the predicted gamma-windows; the worst case overshoots targets by 10+ when the maximum reward is 1.
+
+**Why this, why now:** The result is a statement about *calibration* of a value head rather than about its accuracy: an unbiased-but-noisy head is systematically optimistic once a max over candidate actions sits downstream of it, and the bias scales with the number of near-tied candidates - which is exactly the regime of power-grid topology control, where many switching configurations have almost identical value and error bars that overlap heavily. Theorems 2-3 also give the uncomfortable quantitative version: the admissible head error shrinks as episodes lengthen and gamma approaches 1, so a diagnostic like ECE on the value head is measuring precisely the quantity that these bounds constrain, and the paper's own remedies (lambda > 0 to inject real sampled rewards, pessimistic bias where data is sparse, additive instead of multiplicative costs) are the ancestors of today's post-hoc fixes.
+
+**Connection to other papers:** It is the orthogonal failure mode to the other two papers in this track: Baird's residual algorithms (2026-08-06) and Tsitsiklis & Van Roy (2026-09-03) both concern *divergence* - the projected Bellman operator ceasing to be a contraction under off-policy sampling or non-expansive projection - whereas here the iteration can be perfectly stable and still converge to the wrong ordering, purely from the max operator's interaction with zero-mean noise. This Jensen-inequality argument is the direct ancestor of the double-estimator line (van Hasselt's Double Q-learning and Double DQN), which attacks the same bias by decoupling the argmax from the value used to evaluate it.
+
+---
+
 ## 2026-09-03 (Thursday) - Track 2: Value-based RL foundations and function-approximation divergence results
 **Title:** An Analysis of Temporal-Difference Learning with Function Approximation
 **Authors:** John N. Tsitsiklis, Benjamin Van Roy
