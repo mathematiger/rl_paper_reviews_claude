@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months on reward shaping, reward m
 
 ---
 
+## 2026-10-02 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
+**Title:** About Time: Model-free Reinforcement Learning with Timed Reward Machines
+**Authors:** Rajarshi Roy, Anirban Majumdar, Ritam Raha, David Parker, Marta Kwiatkowska
+**Venue/Year:** IJCAI 2026 (extended version); arXiv:2512.17637, v1 December 2025, v2 May 2026
+**Link:** https://arxiv.org/abs/2512.17637
+
+**Summary** (~250 words): Reward machines encode non-Markovian reward as a finite automaton over labelled trajectories, but their transitions fire on the *order* of events only, never on *when* events occur - a specification like "restore the line within 10 steps of the overload, and pay for every step of delay" is simply not expressible. This paper adds clocks. A timed reward machine (TRM) is a tuple (U, u0, F, Delta_u, Delta_r) whose transitions carry a propositional label, a guard (a conjunction of constraints x <=> c over clock variables) and a reset set, and whose reward splits in two: a transition reward, plus a state reward accrued *during* a delay. The action space widens to pairs (delay, action), so waiting becomes a decision with its own cost. Two semantics are studied. Under digital clocks (T = N) the cross product S x U x V over bounded clock valuations is a finite MDP, and tabular Q-learning converges to the optimal policy (Thm 2). Under real time (T = R>=0) an optimal delay-discounted policy need not exist at all (Thm 3), so the authors import the region/corner-point abstraction from timed-automata theory - learn over regions plus their integral corner points - and get an epsilon-optimal policy for a discount factor close enough to 1 (Thm 4). A counterfactual-imagining heuristic generalizes the reward-machine trick of replaying one environment transition at every automaton state, now also perturbing clock valuations (radius < 5) and the chosen delay, keeping the top 15. On Taxi and Frozen Lake, corner-point + CI beats both digital clocks and plain reward machines; cross products of up to 23M states are learned while only ~10^2-10^3 states are ever visited, in 35-356 seconds.
+
+**Why this, why now:** Power-grid control in the Grid2Op style is full of constraints that are about elapsed time rather than event order - cooldown periods after a switching action, how many steps a line may stay overloaded before it trips, maintenance windows - and these are exactly what a standard reward machine's guards cannot express; TRMs add clocks, guards and resets at the automaton level and make waiting an explicit, priced action. The two semantics also matter practically: the digital-clock product is the drop-in finite-MDP version, while Theorem 3's non-existence result is a warning that a naive continuous-delay formulation has no optimal policy to converge to in the first place.
+
+**Connection to other papers:** Within this track it is the third distinct expressiveness axis bolted onto the same automaton interface: Pushdown Reward Machines (2026-08-19) widen the language class from regular to deterministic context-free with a stack, Expressive Temporal Specifications for Reward Monitoring (2026-09-04) makes the acceptance signal graded instead of Boolean, and TRMs add real-valued clocks - all three keep the "automaton reads labelled trace, emits reward" contract and are in principle composable. Its counterfactual-imagining heuristic is a direct descendant of the counterfactual experience generation in the original QRM line that Symbolic Reward Machines (2026-09-18) also builds on, extended here to perturb clock valuations and delays rather than only automaton states.
+
+---
+
 ## 2026-09-18 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
 **Title:** Reinforcement Learning with Symbolic Reward Machines
 **Authors:** Thomas Krug, Daniel Neider
