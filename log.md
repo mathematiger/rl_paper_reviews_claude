@@ -7,6 +7,19 @@ first.
 
 ---
 
+## 2026-10-08 (Thursday) - Track 4: Calibration and uncertainty classics
+**Title:** Probabilistic forecasts, calibration and sharpness
+**Authors:** Tilmann Gneiting, Fadoua Balabdaoui, Adrian E. Raftery
+**Venue/Year:** Journal of the Royal Statistical Society: Series B (Statistical Methodology), 69(2):243-268, 2007
+**Link:** https://doi.org/10.1111/j.1467-9868.2007.00587.x (open PDF: https://sites.stat.washington.edu/people/raftery/Research/PDF/Gneiting2007jrssb.pdf)
+
+**Summary:** How do you judge a forecaster that outputs a whole predictive distribution rather than a number? The then-standard answer was the probability integral transform (PIT): if the forecast CDF F_t equals the true data-generating G_t, then p_t = F_t(x_t) is uniform, so a flat PIT histogram certifies the forecaster. Hamill's counterexample showed this is necessary but not sufficient - a forecaster whose every single prediction is biased can still yield a uniform PIT. This paper fixes the gap by replacing the single word "calibrated" with a taxonomy. In a framework where nature picks G_t and the forecaster picks F_t, it defines probabilistic calibration (uniform PIT), exceedance calibration, marginal calibration (the average forecast CDF equals the average true CDF), and strong calibration (all three). Explicit counterexamples - the climatological, unfocused, lopsided, mean-biased and sign-biased forecasters - show the three notions are mutually non-implying. The prescription that follows is the lasting contribution: *maximize sharpness subject to calibration*. Calibration is a joint property of forecasts and outcomes and acts as the constraint; sharpness, the concentration of the predictive distribution, is a property of the forecasts alone and is what you optimize. Diagnostics are given for each: PIT histogram, marginal calibration plot, sharpness diagram of prediction-interval widths, and proper scoring rules as a single summary. Theorem 1 warns that a forecaster can be probabilistically and marginally calibrated yet *sharper* than the ideal forecaster, so sharpness alone never ranks forecasters. The approach is demonstrated by ranking wind-speed forecasts at the Stateline wind energy centre.
+
+**Why this, why now:** This is the primary source for a distinction calibration diagnostics quietly depend on - a binned reliability statistic such as ECE tests one calibration notion only, and this paper pins down which guarantees that buys and which it does not. The "maximize sharpness subject to calibration" framing is also the right lens on post-hoc recalibration: an affine or isotonic map can flatten a reliability curve while quietly flattening the predictive distribution too, and the sharpness diagram plus a proper score is the check that catches it. Doubly relevant given that the wind-speed case study is essentially a power-grid forecasting setting.
+
+**Connection to other papers:** Guo et al. (2017, logged 2026-08-13) measure exactly one of these notions for classifier confidence and show deep networks violate it, while this paper explains why passing that test is not enough; the Dirichlet calibration paper (Kull et al. 2019, logged 2026-09-10) meets the same split again in its classwise-versus-canonical calibration distinction. It also lifts Murphy and Winkler's diagnostic framework for point forecasts - and the reliability/resolution decomposition of the Brier score behind it - from scalar predictions to full predictive distributions.
+
+---
 ## 2026-10-07 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
 **Title:** Learning Multi-Timescale Abstractions for Hierarchical Combinatorial Planning
 **Authors:** Vivienne Huiling Wang (Aalto University), Tinghuai Wang (Qutwo, Finland), Joni Pajarinen (Aalto University)
