@@ -4,6 +4,20 @@ Papers published within roughly the last 6-12 months on reward shaping, reward m
 
 ---
 
+## 2026-10-16 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
+**Title:** Reward Machines for Signal Temporal Logic
+**Authors:** Alper Kamil Bozkurt, Shangtong Zhang, Yuichi Motai
+**Venue/Year:** arXiv preprint 2608.13625, August 2026 (cs.AI; CC BY 4.0)
+**Link:** https://arxiv.org/abs/2608.13625
+
+**Summary:** Signal temporal logic (STL) states real-time properties of real-valued signals and scores a trajectory by a robustness value. The standard RL recipe uses that robustness as reward, but robustness is a function of the whole trajectory, so the reward is non-Markovian; the usual fixes - stacking or recurrent memory over raw observations, or restricting to an STL fragment - either blow up on long horizons or give up expressiveness. This paper instead compiles the *full* STL formula into a reward machine. The specification is translated into a one-clock alternating timed automaton (OCATA) with a Buechi condition; disjunction becomes nondeterministic choice (the agent picks the epsilon-action), conjunction spawns parallel copies that must all accept. The resulting STL-RM carries as memory a bounded list (N=50) of entries, each a probability distribution over automaton locations plus a clock value, one entry per conjunctive copy; predicates are softened by pushing their value through a CDF (sigmoid), so transitions carry robustness information rather than a hard indicator. Appending this memory to the environment state gives a product MDP whose reward - scaled probability mass in accepting locations, with state-dependent discounting - is Markovian, so off-the-shelf PPO applies. On five Gymnasium tasks (CartPole, Reacher, Pusher, Fetch, Adroit) with native rewards removed, STL-RM reaches near-perfect satisfaction on a sequencing+safety spec and keeps it once a 30-step stability clause is added, where stacking and LSTM robustness-reward baselines collapse; an ablation replacing the CDF by an indicator matches satisfaction but yields lower robustness.
+
+**Why this, why now:** This is the cleanest current recipe for turning a *signal-valued, time-bounded* safety/recovery specification - the shape most power-grid objectives actually take, e.g. "keep every line below its loading limit, and if a limit is breached restore the margin within k steps" - into a Markovian reward by state-augmentation rather than by hand-designing a shaping term, which is exactly the move a reward-machine front needs when the quantities being constrained are continuous rather than Boolean events. The CDF-softened predicates are also worth noting: they make the automaton's transition structure carry graded, probability-like information about how far a threshold predicate is from being violated, giving a dense learning signal without leaving the automaton formalism.
+
+**Connection to other papers:** It extends Icarte et al.'s reward machines (JAIR 2022) with nondeterministic, conjunctive and probabilistic transitions plus a Buechi acceptance condition, and reuses the state-based rewarding/discounting scheme of Bozkurt et al. (ICRA 2020) and the MITL-to-OCATA translation of Brihaye et al. (MightyL). It sits next to "About Time: Model-free RL with Timed Reward Machines" (this track, 2026-10-02): both add clocks to reward machines, but About Time learns a timed machine from experience over Boolean labels, whereas this paper compiles a given real-valued STL spec into one - and it is the automaton-based counterweight to "Expressive Temporal Specifications for Reward Monitoring" (this track, 2026-09-04), which keeps a quantitative monitor emitting dense rewards instead of folding the monitor state into the MDP.
+
+---
+
 ## 2026-10-02 (Friday) - Track 4: Reward shaping / reward machines / non-Markovian rewards
 **Title:** About Time: Model-free Reinforcement Learning with Timed Reward Machines
 **Authors:** Rajarshi Roy, Anirban Majumdar, Ritam Raha, David Parker, Marta Kwiatkowska
