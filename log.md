@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-10-18 (Sunday) - Track W2: Influential GNN breakthroughs
+**Title:** Learning to Simulate Complex Physics with Graph Networks
+**Authors:** Alvaro Sanchez-Gonzalez, Jonathan Godwin, Tobias Pfaff, Rex Ying (equal contribution), Jure Leskovec, Peter W. Battaglia (DeepMind / Stanford University)
+**Venue/Year:** ICML 2020, PMLR 119; arXiv:2002.09405 (v1 February 2020, v2 September 2020)
+**Link:** https://arxiv.org/abs/2002.09405
+
+**Summary** (~240 words): Traditional physics simulators cost years of engineering and trade generality for accuracy in one narrow regime; prior learned simulators were tailored to a single material. This paper asks whether one architecture can learn fluids, sand, goop and rigid solids - and their interactions - from data alone. The answer is Graph Network-based Simulators (GNS), an encode-process-decode model over particles. The *encoder* builds a graph whose nodes are particles and whose edges join any two particles within a fixed connectivity radius R, recomputed by nearest-neighbour search at every timestep; node features are a short history of C previous velocities plus material type and distance to boundaries, and edge features are the relative displacement and its magnitude, so the model is invariant to absolute position. The *processor* is a stack of M graph network blocks (interaction-network style, no globals) with residual connections, M=10 in the main model. The *decoder* MLP emits per-particle accelerations, which a semi-implicit Euler integrator turns into the next state. Training is pure one-step supervised regression against SPH, MPM and PBD ground truth. Two findings dominate the ablations: more message-passing steps monotonically improve long-horizon rollouts, and corrupting input velocities with random-walk noise during training is what stops error from compounding - the model must see off-distribution inputs to survive feeding on its own predictions. Trained on 2.5k-particle water in a box, it rolls out stably to 85k particles over a 32x larger domain for 5000 steps.
+
+**Why this, why now:** The result is genuinely surprising: a local, radius-graph message-passing model trained only on single-step targets extrapolates by an order of magnitude in particle count, 8x in horizon and 32x in spatial extent - evidence that the right relational inductive bias buys generalisation that no amount of data augmentation would. The noise-injection trick is also one of the most quietly instructive ideas in the literature, a clean statement that autoregressive rollout failure is a train/test distribution mismatch rather than a capacity problem.
+
+**Connection to other papers:** GNS is a direct instance of the message-passing abstraction formalised in "Neural Message Passing for Quantum Chemistry" (this track, 2026-09-06) - the encode-process-decode skeleton and the learned edge function are MPNN's phases with an integrator bolted on - and its relative-displacement edge features play the role GraphSAGE's sampled aggregator plays (this track, 2026-10-04): both buy transfer to graphs unseen at training time by refusing to depend on global or absolute structure. Its reliance on M=10 message-passing steps to propagate pressure waves is the empirical face of the depth-versus-reach limits studied in "What graph neural networks cannot learn: depth vs width" (Track W4, 2026-09-27).
+
+---
+
 ## 2026-10-17 (Saturday) - Track W1: Influential RL breakthroughs
 **Title:** Mastering the game of Stratego with model-free multiagent reinforcement learning
 **Authors:** Julien Perolat, Bart De Vylder, Daniel Hennes, Eugene Tarassov, Florian Strub, Vincent de Boer, Paul Muller, Jerome T. Connor, Neil Burch, Thomas Anthony, Stephen McAleer, Romuald Elie, Sarah H. Cen, Zhe Wang, Audrunas Gruslys, Aleksandra Malysheva, Mina Khan, Sherjil Ozair, Finbarr Timbers, Toby Pohlen, Tom Eccles, Mark Rowland, Marc Lanctot, Jean-Baptiste Lespiau, Bilal Piot, Shayegan Omidshafiei, Edward Lockhart, Laurent Sifre, Nathalie Beauguerlange, Remi Munos, David Silver, Satinder Singh, Demis Hassabis, Karl Tuyls (DeepMind)
