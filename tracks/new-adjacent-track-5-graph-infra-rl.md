@@ -4,6 +4,19 @@ Power grids, scheduling, and network control - Grid2Op/L2RPN-adjacent, Flatland-
 
 ---
 
+## 2026-10-19 (Monday) - Track 5: Graph-structured / infrastructure RL
+**Title:** Distributed Control of Network Systems in the Space of Stabilizing Graph Neural Network Policies
+**Authors:** John Cao, Luca Furieri
+**Venue/Year:** arXiv:2512.18540 [eess.SY, cs.LG, math.OC], v1 20 December 2025, v2 26 May 2026 (preprint, no venue stated)
+**Link:** https://arxiv.org/abs/2512.18540
+
+**Summary** (150-250 words): Learned controllers for networks of coupled subsystems face a three-way tension: they must be distributed (each agent acting on its K-hop neighborhood), scalable across changing agent counts, and stabilizing. CTDE actor-critic methods give up the stability guarantee; existing stability-aware schemes restrict themselves to linear systems, pure disturbance feedback, or small GNN weights (Gama & Sojoudi). This paper gets all three at once by building the policy inside a *parameterization of stabilizing controllers* rather than constraining an arbitrary one. The vehicle is the magnitude-direction (MAD) framework: u_t = |M_t(w_{t:0})| * D_t, where a Youla-style argument says closed-loop stability is *equivalent* to the input being a stable operator acting on disturbances. The magnitude M is a GNN over stacked disturbances followed by a node-wise Linear Recurrent Unit whose diagonal recurrence is spectrally constrained below 1; the direction D_t is a tanh-squashed Gaussian whose statistics come from an RNN over a GNN state embedding, so stochastic state feedback rides along without touching the stability bound (|D_t| <= 1). Stability therefore holds by construction, even untrained. Theorem 2 further bounds closed-loop trajectory deviation under perturbations of the graph support matrix or model weights: finite topology changes cannot destabilize the loop. Trained with PPO (with a change-of-variables log-prob correction) on the Multi-Agent Particle Environment, it beats no-stability (InforMARL-like), centralized-actor and centralized-critic ablations at 5/7/10 agents (274/371/503 vs 204/267/352 reward), and the centralized actor cannot transfer across agent counts at all.
+
+**Why this, why now:** Power grid control policies must stay well-behaved precisely when the graph they act on is reconfigured, and this paper's Theorem 2 gives an explicit bound on closed-loop deviation under perturbation of the GNN's support matrix - the formal version of "does my graph policy survive a topology change." The stability-by-construction trick (search over stable disturbance-to-input operators instead of filtering a free policy) is also a cleaner alternative to bolting safety checks onto a learned grid controller after the fact.
+
+**Connection to other papers:** This is the guarantee-first counterpart to the empirically-decentralized approach of Fabrizio et al., "Power Grid Control with Graph-Based Distributed Reinforcement Learning" (Track 5, 2026-08-07): both factor control across the graph for scalability, but Cao & Furieri buy transferability across system sizes from the parameterization rather than from training tricks. It also sharpens the Gama & Sojoudi line of GNN-based distributed control by dropping the linear-system and small-weight restrictions, and shares the "work in a space where the constraint is automatic" philosophy with the self-supervised reconfiguration work logged on 2026-10-05, which likewise avoids an explicit RL loop over a constrained action space.
+
+---
 ## 2026-10-05 (Monday) - Track 5: Graph-structured / infrastructure RL
 **Title:** Self-Supervised Graph Neural Networks for Optimal Substation Reconfiguration
 **Authors:** Antoine Martinez, Balthazar Donon (RTE R&D, Paris), Louis Wehenkel (Université de Liège), Efthymios Karangelos (University College Dublin)
