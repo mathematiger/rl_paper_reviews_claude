@@ -2,6 +2,21 @@
 
 Papers published within roughly the last 6-12 months on model-based RL and MCTS variants applied to combinatorial or continuous control, adjacent to the user's MuZero-for-power-grid-topology-control PhD work.
 
+## 2026-10-21 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
+**Title:** Gaussian Process Aggregation for Root-Parallel Monte Carlo Tree Search with Continuous Actions
+**Authors:** Junlin Xiao (CUHK-Shenzhen; work done at Oxford Robotics Institute), Victor-Alexandru Darvariu (Oxford Robotics Institute, Dept. of Engineering Science, University of Oxford), Bruno Lacerda (Stateful Robotics; work done at ORI Oxford), Nick Hawes (Oxford Robotics Institute, University of Oxford)
+**Venue/Year:** Reinforcement Learning Journal (RLJ) 2026 / RLC 2026; arXiv:2512.09727 [cs.AI], v1 10 Dec 2025, v2 16 Jul 2026
+**Link:** https://arxiv.org/abs/2512.09727
+
+**Summary** (~240 words): Root-parallel MCTS is the standard way to buy more search per unit of wall-clock time: several workers build *independent* trees from the same root state, and their root statistics are then merged into one decision. The paper's observation is that the merge step is unsolved for continuous actions. With a finite action set you can majority-vote over root children (Soejima et al. 2010); with continuous actions every worker samples its own actions, so no two trees share a child and voting is undefined. Existing fixes evaluate actions independently (Max = highest Q anywhere, Most Visited = highest visit count) or relate them through a hand-set Euclidean similarity kernel (Kurzer et al. 2020: Similarity Vote, Similarity Merge). All of them are restricted to returning an action some worker actually trialed. GPR2P replaces the merge with a probabilistic surrogate: pool every root action from all 8 trees, discard those whose visit count falls below a threshold tau (a reliability filter that also caps the GP's data size at roughly 400 points, keeping the O(M^3) fit affordable), fit a zero-mean RBF-kernel GP to the surviving (action, Q(s0,a)) pairs with hyperparameters set by marginal-likelihood maximisation (L-BFGS-B, scikit-learn), and return argmax of the posterior mean *over the whole action space* - an action no worker need have tried. Per-thread search is plain UCT with progressive widening (double PW in the stochastic domains). Across six domains (Lunar Lander, Mountain Car, Pendulum, plus three self-designed stochastic ones) GPR2P reaches 0.9028 overall mean reciprocal rank vs 0.6389 for its own existing-actions-only variant and 0.4826 for Similarity Merge.
+
+**Why this, why now:** The shared mechanism is exactly the multi-worker exploration architecture: once several workers search the same root independently, the aggregation rule - not the per-worker search - decides what gets executed, and this paper is the first systematic benchmark of that rule under continuous actions. The load-bearing result is the GPR2P vs GPR2P-EA gap (0.9028 vs 0.6389): restricting the final choice to actions some worker actually trialed costs most of the benefit, which is a direct argument that a fitted surrogate over the pooled worker statistics beats any argmax over the union of sampled candidates - the same decision a power-grid planner faces when several workers return disjoint candidate sets.
+
+**Connection to other papers:** It is orthogonal to TransZero (2026-08-10) on where parallelism lives: TransZero removes the sequential bottleneck *inside* one tree, whereas GPR2P keeps workers fully independent and invests everything in the merge, so the two compose. It shares with Twice Sequential Monte Carlo for Tree Search (2026-09-09) the move of treating accumulated search statistics as a posterior to be modelled rather than a table to be read off, and it is the continuous-action counterpart to the discrete majority-voting lineage (Soejima et al. 2010) that Kurzer et al. (2020) first tried to extend by similarity weighting.
+
+---
+
+
 ---
 
 ## 2026-10-07 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
