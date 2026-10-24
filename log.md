@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-10-24 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
+**Title:** Between MDPs and Semi-MDPs: A Framework for Temporal Abstraction in Reinforcement Learning
+**Authors:** Richard S. Sutton (AT&T Labs - Research), Doina Precup (Computer Science Dept., University of Massachusetts Amherst), Satinder Singh (AT&T Labs - Research)
+**Venue/Year:** Artificial Intelligence 112:181-211, 1999 (DOI 10.1016/S0004-3702(99)00052-1; precursor TR "Learning, Planning, and Representing Knowledge at Multiple Temporal Scales", 1998)
+**Link:** https://doi.org/10.1016/S0004-3702(99)00052-1
+
+**Summary** (~250 words): A conventional MDP is locked to a single time step, so reasoning over extended courses of action means reasoning over intractably many primitive decisions. This paper enlarges the action set with *options* - closed-loop, temporally extended behaviours - while changing as little of the RL framework as possible. An option is a triple <I, pi, beta>: an initiation set I subset of S saying where it may be started, an internal policy pi, and a stochastic termination condition beta; primitive actions are the degenerate case with beta identically 1. Semi-Markov options let pi and beta depend on the whole history since initiation, which is what allows timeouts. Theorem 1 (MDP + Options = SMDP) states that selecting among options and running each to termination turns any MDP into a semi-Markov decision process, so SMDP value iteration and Q-learning carry over unchanged. Planning needs option models: a discounted reward model r_s^o and a *multi-time* transition model p_{ss'}^o = sum_k p(s',k) gamma^k, which folds "where the option ends" and "how long it took" into one object and yields a Bellman equation identical in form to the primitive one. The paper's sharpest results are where SMDP theory stops, because it treats an option as an indivisible atom. Theorem 2 (Interruption) shows that terminating an option whenever Q^mu(h,o) < V^mu(s) is weakly better than the plan, and strictly better if an interrupted history is reachable. Theorem 3 proves one-step intra-option Q-learning converges off-policy to Q*_O, learning every consistent option from fragments of a single trajectory. A four-rooms gridworld with hallway options illustrates all three.
+
+**Why this, why now:** The options framework is the backbone of essentially every later hierarchical RL method, and it earns that place by being almost embarrassingly economical - three symbols <I, pi, beta>, and the whole MDP apparatus (Bellman equations, value iteration, Q-learning, convergence proofs) transfers verbatim, with primitive actions a special case rather than a separate concept. The genuinely exciting part is what comes after Theorem 1: the authors point out that the SMDP reduction is *too coarse* because it treats an option as an atom with no inner structure, and then show that looking inside the atom buys a strict policy improvement (interruption) and a large sample-efficiency gain (intra-option learning) for free, on the same data and with no new machinery.
+
+**Connection to other papers:** The multi-time model p_{ss'}^o = sum_k p(s',k) gamma^k is the same discounted-occupancy device as Dayan's successor representation (Track W3, 2026-10-10), specialised to an option's termination distribution rather than a fixed policy's entire future - options give the SR a "where does this behaviour hand control back" semantics, and both buy generalisation by predicting *when-weighted* future state rather than the next state. It is also an instructive foil to Todorov's linearly-solvable MDPs (Track W3, 2026-08-15): Todorov makes planning tractable by reshaping the action space analytically until the Bellman equation has a closed form, whereas options leave the Bellman operator's form untouched and coarsen time instead.
+
+---
+
 ## 2026-10-23 (Friday) - Track 3: Calibration of learned value/policy heads, uncertainty quantification in deep RL
 **Title:** Epistemic Robust Offline Reinforcement Learning
 **Authors:** Abhilash Reddy Chenreddy, Erick Delage (GERAD, Department of Decision Sciences, HEC Montreal)
@@ -49,7 +63,6 @@ first.
 
 ---
 
-
 ## 2026-10-20 (Tuesday) - Track 7: Exploration theory (UCB/bandit foundations, bootstrapped/ensemble exploration)
 **Title:** (More) Efficient Reinforcement Learning via Posterior Sampling
 **Authors:** Ian Osband, Daniel Russo, Benjamin Van Roy (Stanford University)
@@ -77,6 +90,7 @@ first.
 **Connection to other papers:** This is the guarantee-first counterpart to the empirically-decentralized approach of Fabrizio et al., "Power Grid Control with Graph-Based Distributed Reinforcement Learning" (Track 5, 2026-08-07): both factor control across the graph for scalability, but Cao & Furieri buy transferability across system sizes from the parameterization rather than from training tricks. It also sharpens the Gama & Sojoudi line of GNN-based distributed control by dropping the linear-system and small-weight restrictions, and shares the "work in a space where the constraint is automatic" philosophy with the self-supervised reconfiguration work logged on 2026-10-05, which likewise avoids an explicit RL loop over a constrained action space.
 
 ---
+
 ## 2026-10-18 (Sunday) - Track W2: Influential GNN breakthroughs
 **Title:** Learning to Simulate Complex Physics with Graph Networks
 **Authors:** Alvaro Sanchez-Gonzalez, Jonathan Godwin, Tobias Pfaff, Rex Ying (equal contribution), Jure Leskovec, Peter W. Battaglia (DeepMind / Stanford University)
@@ -230,6 +244,7 @@ first.
 **Connection to other papers:** Guo et al. (2017, logged 2026-08-13) measure exactly one of these notions for classifier confidence and show deep networks violate it, while this paper explains why passing that test is not enough; the Dirichlet calibration paper (Kull et al. 2019, logged 2026-09-10) meets the same split again in its classwise-versus-canonical calibration distinction. It also lifts Murphy and Winkler's diagnostic framework for point forecasts - and the reliability/resolution decomposition of the Brier score behind it - from scalar predictions to full predictive distributions.
 
 ---
+
 ## 2026-10-07 (Wednesday) - Track 1: Model-based RL / MCTS variants for combinatorial or continuous control
 **Title:** Learning Multi-Timescale Abstractions for Hierarchical Combinatorial Planning
 **Authors:** Vivienne Huiling Wang (Aalto University), Tinghuai Wang (Qutwo, Finland), Joni Pajarinen (Aalto University)
@@ -468,7 +483,6 @@ first.
 
 ---
 
-
 ## 2026-09-20 (Sunday) - Track W2: Influential GNN breakthroughs
 **Title:** Spectral Networks and Locally Connected Networks on Graphs (the ICLR/LeCun-page version is titled "Spectral Networks and Deep Locally Connected Networks on Graphs")
 **Authors:** Joan Bruna, Wojciech Zaremba, Arthur Szlam, Yann LeCun (NYU / City College of New York)
@@ -664,7 +678,6 @@ first.
 **Connection to other papers:** This is the same factorisation instinct as Fabrizio et al. (Track 5, 2026-08-07), which likewise pairs a high-level manager with specialised low-level agents on Grid2Op - but where that work factorises the *observation* spatially via a GNN over local topology, this one factorises by *decision type*, keeping observations task-specific rather than agent-local, so the two are complementary axes of the same decomposition. It also stands in contrast to Dmitruka & Freivalds (Track 5, 2026-08-21), which shrinks a monolithic policy after the fact by distillation, whereas Maze-Flatland avoids the monolith at training time.
 
 ---
-
 
 ## 2026-09-06 (Sunday) - Track W2: Influential GNN breakthroughs
 **Title:** Neural Message Passing for Quantum Chemistry
