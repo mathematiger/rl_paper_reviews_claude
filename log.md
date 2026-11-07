@@ -7,6 +7,20 @@ first.
 
 ---
 
+## 2026-11-07 (Saturday) - Track W3: RL theory with inspirational/deep theoretical background
+**Title:** Stochastic Games
+**Authors:** L. S. Shapley (Princeton University)
+**Venue/Year:** Proceedings of the National Academy of Sciences 39(10):1095-1100, October 1953 (DOI 10.1073/pnas.39.10.1095; PMCID PMC1063912)
+**Link:** https://pmc.ncbi.nlm.nih.gov/articles/PMC1063912/
+
+**Summary** (~240 words): Von Neumann's minimax theorem settles the one-shot zero-sum matrix game. Shapley asks what survives when the game acquires *state* and no fixed horizon, and answers it in six pages. The model: a finite set of N positions; in position k the two players simultaneously pick i and j, the maximiser collects payoff a^k_ij, and play either moves to position l with probability s^kl_ij or stops with probability s^k_ij = 1 - sum_l s^kl_ij, assumed strictly positive for every (k,i,j). The total payoff is the *undiscounted* sum of stage payoffs until stopping; positive stop probability makes play terminate almost surely and keeps the sum bounded. The construction is the part worth reading. For a candidate value vector v in R^N, form the auxiliary matrix game A^k(v) whose entries are a^k_ij + sum_l s^kl_ij v_l - immediate payoff plus continuation value - and define Phi(v)_k = val A^k(v), each val existing by Loomis's elementary minimax lemma. Phi is a sup-norm contraction with modulus 1 - min s^k_ij, so Banach yields a unique fixed point v*. The theorems: v* is the value vector of the stochastic game, and optimal mixed strategies of the auxiliary games A^k(v*) assemble into *stationary* optimal strategies for both players - remembering history buys nothing. The iteration v_{n+1} = Phi(v_n) converges geometrically, a constructive algorithm. The discounted game is the special case of a constant stop probability 1 - beta.
+
+**Why this, why now:** This is where value iteration comes from: Phi is the Bellman optimality operator with `max` replaced by `val`, and deleting one player leaves the textbook contraction argument intact - so the fixed-point scaffolding the whole field runs on was first written down for the strictly harder two-player case, within a year of Bellman's first dynamic-programming paper (which Shapley cites). It also contains the cleanest justification of the discount factor ever offered: gamma is not a modelling convenience but literally the probability that the game has not yet stopped, which is what makes the undiscounted payoff finite and the operator a contraction in one stroke.
+
+**Connection to other papers:** Within this track it is the common ancestor of the operator-swapping papers: A Theory of Regularized Markov Decision Processes (Track W3, 2026-09-26) replaces the bracket's `max` with a smoothed max and reuses Shapley's contraction-plus-Banach scaffolding verbatim, while Todorov's Linearly-Solvable Markov Decision Problems (Track W3, 2026-08-15) leaves the operator alone and reshapes the action space until the bracket has a closed form. Fixing both players' stationary strategies in Shapley's model collapses it to the resolvent (I - gamma P^pi)^-1 whose image is the object studied in The Value Function Polytope in Reinforcement Learning (Track W3, 2026-08-29).
+
+---
+
 ## 2026-11-05 (Thursday) - Track 3: MCTS and planning theory
 **Title:** Bandit Algorithms for Tree Search
 **Authors:** Pierre-Arnaud Coquelin (CMAP, Ecole Polytechnique), Remi Munos (INRIA Futurs, SequeL)
