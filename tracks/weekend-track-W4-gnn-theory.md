@@ -4,6 +4,19 @@ Expressivity, over-smoothing/over-squashing, connections to Weisfeiler-Leman, sp
 
 ---
 
+## 2026-11-08 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
+**Title:** Graph Neural Networks Exponentially Lose Expressive Power for Node Classification
+**Authors:** Kenta Oono, Taiji Suzuki (University of Tokyo / RIKEN AIP)
+**Venue/Year:** ICLR 2020; arXiv:1905.10947 (v1 May 2019, v5 January 2021)
+**Link:** https://arxiv.org/abs/1905.10947
+
+**Summary** (~240 words): Deep GCNs get *worse* with depth. This paper explains why with a single contraction argument. Read a GCN without readout as the dynamical system X^(l+1) = sigma(P X^(l) W_l), where P = I - Delta-tilde is the self-loop-augmented normalized adjacency. If G has M connected components, P's top eigenvalue 1 has multiplicity exactly M with eigenbasis e_m = D-tilde^(1/2) u_m (u_m the component indicators), and all other eigenvalues lie strictly inside (-1,1); let lambda = max over them of |lambda_n| < 1. Define the invariant subspace M = span(e_m) tensor R^C and s_l = max singular value of W_l. Main theorem: d_M(f_l(X)) <= s_l lambda d_M(X), hence d_M(X^(l)) = O((s lambda)^l) - exponential collapse onto M whenever s lambda < 1. The proof's elegance is that ReLU is handled almost for free: non-negativity of the basis e_m gives d_M(sigma(X)) <= d_M(X), so the non-linearity never helps escape. Collapse onto M is "information loss": two nodes in the same component with equal degree become indistinguishable, so depth destroys exactly the signal node classification needs. Because the rate is spectral, graph topology sets the budget: on Erdos-Renyi G(N,p) with log N/(Np) = o(1), lambda -> 0 and the safe threshold s_0 ~ sqrt(Np/log(4N/eps)) grows, so dense large graphs doom a *broad* range of weight scales. The constructive payoff is a weight-normalization guideline - keep s above lambda^(-1) - validated on Cora/CiteSeer/PubMed (edge-densified, since real citation graphs give lambda^(-1) ~ 1.004).
+
+**Why this, why now:** It converts a famous piece of folklore - "deep GCNs over-smooth" - into a two-line contraction bound with an explicit, computable rate (s lambda) tying trainable weight norms to the graph's Laplacian spectrum, which is about as clean as deep-learning theory gets. The closing discussion is the genuinely thought-provoking part: since expressivity demands large weights while generalization punishes them, there must be a bias-variance "sweet spot" in weight scale - an over-smoothing/over-fitting tradeoff posed as a statistical-learning-theory question that is still largely open.
+
+**Connection to other papers:** It is the depth-side complement to "Understanding over-squashing and bottlenecks on graphs via curvature" (Track W4, 2026-08-30): both derive a failure mode from graph geometry, but over-squashing says information cannot *reach* far enough while over-smoothing says it is *erased* on the way, and the two pull depth in opposite directions. Its collapse onto degree-and-component information is precisely the 1-WL ceiling of "How Powerful are Graph Neural Networks?" (Track W4, 2026-08-16) arrived at dynamically rather than combinatorially - GIN bounds what one layer can distinguish, this bounds what survives many - and it sharpens Loukas's depth-vs-width result (Track W4, 2026-09-27) by showing the useful depth range is capped from above as well as below.
+
+---
 ## 2026-10-25 (Sunday) - Track W4: GNN theory with inspirational/deep theoretical background
 **Title:** The Logical Expressiveness of Graph Neural Networks
 **Authors:** Pablo Barcelo, Egor V. Kostylev, Mikael Monet, Jorge Perez, Juan Reutter, Juan Pablo Silva (IMFD Chile - PUC Chile and Universidad de Chile - with Kostylev at University of Oxford)
